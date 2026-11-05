@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Studio — Autonomous AI & Database Management</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <!-- Remix Icons / Modern Web Glyphs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Marked.js for rich Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Highlight.js for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+  <div id="app-container">
+
+    <!-- ======================================================================
+         1. Left Sidebar Navigation
+         ====================================================================== -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-header">
+          <div class="brand-icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div class="brand-title">
+            <h1>Brain Studio</h1>
+            <span>Core Orchestrator</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-page="chat">
+            <i class="fa-solid fa-comments icon"></i>
+            <span>Chat Page</span>
+          </div>
+
+          <div class="nav-item" data-page="tools">
+            <i class="fa-solid fa-wrench icon"></i>
+            <span>Tools Page</span>
+            <span class="nav-badge" id="sidebar-tools-badge">0</span>
+          </div>
+
+          <div class="nav-item" data-page="db">
+            <i class="fa-solid fa-database icon"></i>
+            <span>DB Updater</span>
+          </div>
+
+          <div class="nav-item" data-page="logs">
+            <i class="fa-solid fa-timeline icon"></i>
+            <span>Logs & Iterations</span>
+          </div>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-card">
+          <div class="status-dot"></div>
+          <div class="status-text">
+            <strong>SQLite3 DB Connected</strong>
+            <span id="sidebar-stats-text">API_Store.db</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         2. Main Application Wrapper
+         ====================================================================== -->
+    <main class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h2 class="page-title" id="header-page-title">Interactive Chat</h2>
+        </div>
+        <div class="header-actions">
+          <div class="stat-pill">
+            <span>Providers:</span> <b id="stat-providers">-</b>
+          </div>
+          <div class="stat-pill">
+            <span>Active Models:</span> <b id="stat-models">-</b>
+          </div>
+          <div class="stat-pill">
+            <span>API Keys:</span> <b id="stat-keys">-</b>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-global-refresh" title="Refresh state">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="page-content-area">
+
+        <!-- ==================================================================
+             Page 1: Chat Page
+             ================================================================== -->
+        <section id="page-chat" class="page-view active">
+          <div class="chat-layout">
+            <!-- Left Conversations Sidebar -->
+            <aside class="chat-sidebar">
+              <div class="chat-sidebar-header">
+                <button class="btn btn-primary btn-new-chat" id="btn-new-chat">
+                  <i class="fa-solid fa-plus"></i> New Chat
+                </button>
+                <div class="chat-search-wrap">
+                  <i class="fa-solid fa-magnifying-glass chat-search-icon"></i>
+                  <input type="text" id="chat-search-input" class="input-control" placeholder="Search chats...">
+                </div>
+              </div>
+
+              <div class="chat-conversations-list" id="chat-conversations-list">
+                <!-- Conversation cards rendered dynamically -->
+              </div>
+            </aside>
+
+            <!-- Right Main Chat Workspace -->
+            <div class="chat-main">
+              <div class="chat-controls-bar">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 40%;">
+                  <span class="active-chat-title" id="active-chat-title">New Chat</span>
+                  <button class="btn-icon-subtle" id="btn-rename-chat" title="Rename conversation">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                  <label style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 12px;">
+                    Mode:
+                    <select id="chat-mode-select" class="select-control" style="width: 155px; padding: 6px 10px;">
+                      <option value="agent">Autonomous Agent</option>
+                      <option value="direct">Direct Model</option>
+                    </select>
+                  </label>
+
+                  <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);">
+                    Temp:
+                    <input type="number" id="chat-temp" class="input-control" value="0.2" min="0" max="1" step="0.1" style="width: 60px; padding: 6px 8px;">
+                  </label>
+
+                  <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);">
+                    Max Turns:
+                    <input type="number" id="chat-turns" class="input-control" value="10" min="1" max="25" style="width: 60px; padding: 6px 8px;">
+                  </label>
+
+                  <button class="btn btn-secondary btn-sm" id="btn-delete-current-chat" title="Delete conversation" style="color: var(--danger);">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Messages Stream -->
+              <div class="chat-messages-container" id="chat-messages">
+                <div class="chat-bubble assistant">
+                  <div class="bubble-content">
+                    👋 <strong>Welcome to Brain Studio!</strong><br>
+                    I am connected to the failover API system. Ask me questions, test autonomous tasks, or switch to the <strong>Tools Page</strong> to manually execute tools or the <strong>DB Updater</strong> to configure providers, models, and keys!
+                  </div>
+                  <div class="bubble-meta">
+                    <span>Assistant Core</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input Bar -->
+              <div class="chat-input-bar">
+                <textarea id="chat-input" class="textarea-control" placeholder="Type a message or instruction for the autonomous agent... (Press Enter to send, Shift+Enter for newline)"></textarea>
+                <button class="btn btn-primary" id="btn-send-chat" style="height: 48px; padding: 0 24px;">
+                  <i class="fa-solid fa-paper-plane"></i> Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================================================================
+             Page 2: Tools Page (Run tools manually)
+             ================================================================== -->
+        <section id="page-tools" class="page-view">
+          <div class="tools-layout">
+            
+            <!-- Left Tool Selector -->
+            <div class="tools-sidebar">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <h3 style="font-size: 15px; font-weight: 700;">Registered Tools</h3>
+                <button class="btn btn-primary btn-sm" id="btn-open-create-tool">
+                  <i class="fa-solid fa-plus"></i> New Tool
+                </button>
+              </div>
+
+              <div class="search-wrapper" style="margin-top: 14px; max-width: 100%;">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="tool-search-input" class="input-control" placeholder="Search tools...">
+              </div>
+
+              <div class="tools-list" id="tools-list-container">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Right Manual Execution Panel -->
+            <div class="tool-runner-panel">
+              <div class="runner-header">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div>
+                    <h2 class="runner-title" id="selected-tool-name">Select a Tool to Execute</h2>
+                    <p class="runner-desc" id="selected-tool-desc">Choose a tool from the left list to inspect its parameter schema, input arguments manually, and view results.</p>
+                  </div>
+                  <span class="badge badge-info" id="selected-tool-module" style="display: none;">Module</span>
+                </div>
+              </div>
+
+              <div id="tool-execution-section" style="display: none; flex-direction: column; gap: 18px;">
+                <!-- Arguments Input Area -->
+                <div class="card-panel" style="padding: 18px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <h3 style="font-size: 14px; font-weight: 700;">Tool Parameters</h3>
+                    <div style="display: flex; gap: 8px;">
+                      <button class="btn btn-secondary btn-sm" id="btn-toggle-json-input">
+                        <i class="fa-solid fa-code"></i> JSON Mode
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Form generated dynamically -->
+                  <div id="dynamic-params-form"></div>
+
+                  <!-- Raw JSON textarea fallback -->
+                  <div id="raw-json-params-wrapper" style="display: none;">
+                    <textarea id="raw-json-params" class="textarea-control" rows="5" placeholder='{"query": "example", "max_results": 5}'></textarea>
+                  </div>
+
+                  <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+                    <button class="btn btn-primary" id="btn-run-tool">
+                      <i class="fa-solid fa-play"></i> Run Tool
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Execution Output Console -->
+                <div class="card-panel" style="padding: 18px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 14px; font-weight: 700;">Execution Output</h3>
+                    <div id="tool-execution-meta" style="display: none; gap: 10px; align-items: center;">
+                      <span id="tool-status-badge" class="badge">Success</span>
+                      <span id="tool-duration-badge" style="font-size: 12px; color: var(--text-faint);">0 ms</span>
+                    </div>
+                  </div>
+                  <pre class="output-console" id="tool-output-console">Waiting for execution...</pre>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==================================================================
+             Page 3: DB Updater (Providers, Models, API Keys without terminal/SQL)
+             ================================================================== -->
+        <section id="page-db" class="page-view">
+          <div class="card-panel">
+            
+            <!-- Navigation Tabs for DB -->
+            <div class="db-tabs">
+              <button class="db-tab-btn active" data-tab="tab-providers">
+                <i class="fa-solid fa-server"></i> Providers
+              </button>
+              <button class="db-tab-btn" data-tab="tab-models">
+                <i class="fa-solid fa-microchip"></i> Models
+              </button>
+              <button class="db-tab-btn" data-tab="tab-keys">
+                <i class="fa-solid fa-key"></i> API Keys
+              </button>
+            </div>
+
+            <!-- Tab 1: Providers -->
+            <div id="tab-providers" class="db-tab-pane active">
+              <div class="card-header">
+                <h2><i class="fa-solid fa-server" style="color: var(--accent-primary);"></i> Providers Management</h2>
+                <div style="display: flex; gap: 12px;">
+                  <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-providers" class="input-control" placeholder="Filter providers...">
+                  </div>
+                  <button class="btn btn-primary" id="btn-add-provider">
+                    <i class="fa-solid fa-plus"></i> Add Provider
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table" id="table-providers">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Base URL</th>
+                      <th>Status</th>
+                      <th>Rate Limit</th>
+                      <th>Last Modified</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 2: Models -->
+            <div id="tab-models" class="db-tab-pane">
+              <div class="card-header">
+                <h2><i class="fa-solid fa-microchip" style="color: var(--accent-secondary);"></i> Models Management</h2>
+                <div style="display: flex; gap: 12px;">
+                  <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-models" class="input-control" placeholder="Filter models...">
+                  </div>
+                  <button class="btn btn-primary" id="btn-add-model">
+                    <i class="fa-solid fa-plus"></i> Add Model
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table" id="table-models">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Provider</th>
+                      <th>Model Name</th>
+                      <th>Size (B)</th>
+                      <th>Status</th>
+                      <th>RPM / RPD</th>
+                      <th>Disabled Reason</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Tab 3: API Keys -->
+            <div id="tab-keys" class="db-tab-pane">
+              <div class="card-header">
+                <h2><i class="fa-solid fa-key" style="color: var(--warning);"></i> API Keys Management</h2>
+                <div style="display: flex; gap: 12px;">
+                  <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-keys" class="input-control" placeholder="Filter keys...">
+                  </div>
+                  <button class="btn btn-primary" id="btn-add-key">
+                    <i class="fa-solid fa-plus"></i> Add API Key
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table" id="table-keys">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Provider</th>
+                      <th>Unique Name</th>
+                      <th>Env Key Name</th>
+                      <th>Env Present</th>
+                      <th>Status</th>
+                      <th>Disabled Reason</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==================================================================
+             Page 4: Logs & Iterations (SQLite3 Tables Visualizer)
+             ================================================================== -->
+        <section id="page-logs" class="page-view">
+          <div class="card-panel">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-timeline" style="color: var(--accent-primary);"></i> Execution Logs (SQLite3 Schema)</h2>
+              <button class="btn btn-secondary btn-sm" id="btn-refresh-logs">
+                <i class="fa-solid fa-arrows-rotate"></i> Refresh Logs
+              </button>
+            </div>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+              Visualizer for the 6 SQLite tables: <code>Conversation</code>, <code>Interactive</code>, <code>Iteration</code>, <code>Find_Best_API</code>, <code>Decide</code>, <code>Wait</code>.
+            </p>
+
+            <div id="logs-conversations-container" style="display: flex; flex-direction: column; gap: 14px;">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       Modals Container
+       ======================================================================== -->
+
+  <!-- Provider Modal -->
+  <div class="modal-overlay" id="modal-provider">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-provider-title">Add Provider</h3>
+        <button class="modal-close" data-close="modal-provider">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="provider-id-input">
+        <div>
+          <label class="param-form-label">Provider Name <span class="req">*</span></label>
+          <input type="text" id="provider-name-input" class="input-control" placeholder="e.g. groq, gemini, cerebras">
+        </div>
+        <div>
+          <label class="param-form-label">Base URL <span class="req">*</span></label>
+          <input type="text" id="provider-url-input" class="input-control" placeholder="https://api.groq.com/openai/v1/chat/completions">
+        </div>
+        <div>
+          <label class="param-form-label">Status</label>
+          <select id="provider-status-input" class="select-control">
+            <option value="active">active</option>
+            <option value="cooldown">cooldown</option>
+            <option value="disabled">disabled</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="modal-provider">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-provider">Save Provider</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Model Modal -->
+  <div class="modal-overlay" id="modal-model">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-model-title">Add Model</h3>
+        <button class="modal-close" data-close="modal-model">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="model-id-input">
+        <div>
+          <label class="param-form-label">Provider <span class="req">*</span></label>
+          <select id="model-provider-select" class="select-control"></select>
+        </div>
+        <div>
+          <label class="param-form-label">Model Name <span class="req">*</span></label>
+          <input type="text" id="model-name-input" class="input-control" placeholder="e.g. openai/gpt-oss-120b">
+        </div>
+        <div>
+          <label class="param-form-label">Model Size (Billion Parameters)</label>
+          <input type="number" id="model-size-input" class="input-control" value="100" step="1">
+        </div>
+        <div>
+          <label class="param-form-label">Status</label>
+          <select id="model-status-input" class="select-control">
+            <option value="active">active</option>
+            <option value="cooldown">cooldown</option>
+            <option value="disabled">disabled</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label class="param-form-label">RPM (Requests / min)</label>
+            <input type="number" id="model-rpm-input" class="input-control" placeholder="Optional">
+          </div>
+          <div>
+            <label class="param-form-label">TPM (Tokens / min)</label>
+            <input type="number" id="model-tpm-input" class="input-control" placeholder="Optional">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="modal-model">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-model">Save Model</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Key Modal -->
+  <div class="modal-overlay" id="modal-key">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-key-title">Add API Key</h3>
+        <button class="modal-close" data-close="modal-key">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="key-id-input">
+        <div>
+          <label class="param-form-label">Provider <span class="req">*</span></label>
+          <select id="key-provider-select" class="select-control"></select>
+        </div>
+        <div>
+          <label class="param-form-label">Unique Name <span class="req">*</span></label>
+          <input type="text" id="key-name-input" class="input-control" placeholder="e.g. PRIMARY, MOHIT, BACKUP">
+        </div>
+        <div>
+          <label class="param-form-label">Environment Variable Key <span class="req">*</span></label>
+          <input type="text" id="key-env-input" class="input-control" placeholder="e.g. API_KEY_GROQ_MOHIT">
+          <small style="color: var(--text-faint); font-size: 11px;">The server will read the secret from this environment variable name.</small>
+        </div>
+        <div>
+          <label class="param-form-label">Status</label>
+          <select id="key-status-input" class="select-control">
+            <option value="active">active</option>
+            <option value="cooldown">cooldown</option>
+            <option value="disabled">disabled</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="modal-key">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-key">Save API Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Tool Modal -->
+  <div class="modal-overlay" id="modal-create-tool">
+    <div class="modal-content" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3>Create New Python Tool</h3>
+        <button class="modal-close" data-close="modal-create-tool">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label class="param-form-label">File Name <span class="req">*</span></label>
+          <input type="text" id="new-tool-filename" class="input-control" placeholder="e.g. my_custom_tool.py">
+        </div>
+        <div>
+          <label class="param-form-label">Python Tool Code <span class="req">*</span></label>
+          <textarea id="new-tool-code" class="textarea-control" rows="12" placeholder="def my_tool(query: str) -> dict:
+    '''Tool docstring describing its capability.'''
+    return {'status': 'ok', 'result': query}"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="modal-create-tool">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-create-tool">Create & Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/db_updater.js"></script>
+  <script src="/static/js/tools.js"></script>
+  <script src="/static/js/chat.js"></script>
+  <script src="/static/js/logs.js"></script>
+</body>
+</html>

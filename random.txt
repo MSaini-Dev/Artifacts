@@ -1,0 +1,15 @@
+https://tasks.googleapis.com this the base url, REST Resource: tasklists Methods delete 
+DELETE /tasks/v1/users/@me/lists/{tasklist} Deletes the authenticated user's specified task list. get 
+GET /tasks/v1/users/@me/lists/{tasklist} Returns the authenticated user's specified task list. insert 
+POST /tasks/v1/users/@me/lists Creates a new task list and adds it to the authenticated user's task lists. list 
+GET /tasks/v1/users/@me/lists Returns all the authenticated user's task lists. patch 
+PATCH /tasks/v1/users/@me/lists/{tasklist} Updates the authenticated user's specified task list. update 
+PUT /tasks/v1/users/@me/lists/{tasklist} Updates the authenticated user's specified task list. REST Resource: tasks Methods clear 
+POST /tasks/v1/lists/{tasklist}/clear Clears all completed tasks from the specified task list. delete 
+DELETE /tasks/v1/lists/{tasklist}/tasks/{task} Deletes the specified task from the task list. get 
+GET /tasks/v1/lists/{tasklist}/tasks/{task} Returns the specified task. insert 
+POST /tasks/v1/lists/{tasklist}/tasks Creates a new task on the specified task list. list 
+GET /tasks/v1/lists/{tasklist}/tasks Returns all tasks in the specified task list. move 
+POST /tasks/v1/lists/{tasklist}/tasks/{task}/move Moves the specified task to another position in the destination task list. patch 
+PATCH /tasks/v1/lists/{tasklist}/tasks/{task} Updates the specified task. update 
+PUT /tasks/v1/lists/{tasklist}/tasks/{task} Updates the specified task. this routes and method

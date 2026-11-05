@@ -1,0 +1,594 @@
+.flow-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 8px;
+}
+
+.flow-page .api-flow {
+    flex: 1;
+    min-height: 0;
+    background: var(--background);
+}
+
+.api-flow .react-flow__background pattern circle {
+    fill: color-mix(in oklch, var(--muted-foreground) 34%, transparent);
+}
+
+.workflow-boundary {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    border: 2px solid color-mix(in oklch, #9b6bff 78%, var(--border));
+    border-radius: 20px;
+    background: color-mix(in oklch, #9b6bff 4%, var(--background));
+    box-shadow: 0 0 0 1px color-mix(in oklch, #9b6bff 35%, transparent),
+        0 0 34px 9px color-mix(in oklch, #9b6bff 17%, transparent);
+}
+
+.workflow-boundary--backend {
+    border-color: color-mix(in oklch, #9b6bff 90%, var(--border));
+    background: color-mix(in oklch, #9b6bff 6%, var(--background));
+    box-shadow: 0 0 0 1px color-mix(in oklch, #9b6bff 42%, transparent),
+        0 0 38px 10px color-mix(in oklch, #9b6bff 22%, transparent);
+}
+
+.workflow-boundary--database {
+    border-color: color-mix(in oklch, #9b6bff 82%, var(--border));
+    background: color-mix(in oklch, #9b6bff 3%, var(--background));
+    box-shadow: 0 0 0 1px color-mix(in oklch, #9b6bff 35%, transparent),
+        0 0 34px 8px color-mix(in oklch, #9b6bff 16%, transparent);
+}
+
+.database-table {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    border: 1px solid color-mix(in oklch, var(--database-table-color, #64748b) 75%, var(--border));
+    border-radius: 9px;
+    background: var(--card);
+    color: var(--card-foreground);
+    box-shadow: 0 4px 12px color-mix(in oklch, #000 24%, transparent);
+}
+
+.database-table__header {
+    display: flex;
+    min-height: 34px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px 8px 0 0;
+    padding: 6px 10px;
+    color: #101015;
+}
+
+.database-table__header strong {
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.database-table__header code {
+    border-radius: 3px;
+    background: rgb(0 0 0 / 14%);
+    padding: 2px 4px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.database-table__columns {
+    padding: 4px 8px 7px;
+}
+
+.database-table__column {
+    display: grid;
+    min-height: 25px;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 7px;
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 42%, transparent);
+    padding: 2px 2px;
+    font-size: 10px;
+}
+
+.database-table__column:last-child {
+    border-bottom: 0;
+}
+
+.database-table__name {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.database-table__key-icon {
+    color: var(--muted-foreground);
+    font-size: 10px;
+}
+
+.database-table__type {
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+.database-table__badges {
+    display: flex;
+    min-width: 32px;
+    justify-content: flex-end;
+    gap: 3px;
+}
+
+.database-table__badge {
+    border-radius: 3px;
+    padding: 2px 4px;
+    color: #fff;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 8px;
+    font-weight: 750;
+    line-height: 1.1;
+}
+
+.database-table__badge--pk {
+    background: #a246e8;
+}
+
+.database-table__badge--fk {
+    background: #397bea;
+}
+
+.database-table__badge--nn {
+    background: #08a99f;
+}
+
+.database-table__badge--uq {
+    background: #d04c91;
+}
+
+.database-table__badge--uq-composite {
+    background: #d04c91;
+}
+
+.database-table .react-flow__handle {
+    width: 9px;
+    height: 9px;
+    border: 2px solid var(--background);
+    background: #9b6bff;
+}
+
+.api-route-group {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    border: 1px solid color-mix(in oklch, #9b6bff 40%, var(--border));
+    border-radius: 12px;
+    background: color-mix(in oklch, #9b6bff 5%, var(--background));
+    padding: 8px 10px;
+    box-shadow: inset 0 0 16px color-mix(in oklch, #9b6bff 5%, transparent);
+}
+
+.api-route-group strong {
+    color: color-mix(in oklch, #8751e8 82%, var(--foreground));
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 0.04em;
+}
+
+.api-route-group span {
+    float: right;
+    color: var(--muted-foreground);
+    font-size: 9px;
+}
+
+.workflow-boundary__header {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid color-mix(in oklch, #9b6bff 50%, var(--border));
+    border-radius: 10px;
+    background: color-mix(in oklch, #9b6bff 12%, var(--card));
+    padding: 8px 12px;
+    color: var(--foreground);
+}
+
+.workflow-boundary__header .api-step__icon {
+    background: color-mix(in oklch, #9b6bff 22%, var(--card));
+    color: #8751e8;
+}
+
+.workflow-boundary__header strong,
+.workflow-boundary__header small {
+    display: block;
+}
+
+.workflow-boundary__header strong {
+    font-size: 12px;
+}
+
+.workflow-boundary__header small {
+    margin-top: 2px;
+    color: var(--muted-foreground);
+    font-size: 10px;
+}
+
+.workflow-boundary .react-flow__handle {
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--background);
+    background: #9b6bff;
+    box-shadow: 0 0 0 2px color-mix(in oklch, #9b6bff 45%, transparent),
+        0 0 14px 4px color-mix(in oklch, #9b6bff 40%, transparent);
+}
+
+.workflow-boundary__input-label,
+.workflow-boundary__output-label {
+    position: absolute;
+    z-index: 1;
+    color: color-mix(in oklch, #8751e8 82%, var(--foreground));
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+}
+
+.workflow-boundary__input-label {
+    top: calc(8% - 7px);
+    left: -58px;
+}
+
+.workflow-boundary__output-label {
+    right: -112px;
+    transform: translateY(-50%);
+}
+
+.workflow-boundary__output-label--success {
+    top: 58%;
+}
+
+.workflow-boundary__output-label--no-route {
+    top: 66%;
+}
+
+.workflow-boundary__output-label--max-attempts {
+    top: 90%;
+}
+
+.api-step {
+    width: 248px;
+    min-height: 122px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    padding: 12px 14px;
+    color: var(--card-foreground);
+    box-shadow: 0 5px 16px color-mix(in oklch, var(--foreground) 10%, transparent);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.api-step--group {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-color: color-mix(in oklch, var(--primary) 42%, var(--border));
+    padding: 12px 14px;
+}
+
+.api-step--substep {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 8px;
+    padding: 7px 10px;
+    box-shadow: 0 2px 8px color-mix(in oklch, var(--foreground) 8%, transparent);
+}
+
+.api-step--substep .api-step__header {
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.api-step--substep .api-step__icon {
+    width: 19px;
+    height: 19px;
+}
+
+.api-step--substep .api-step__icon svg {
+    width: 12px;
+    height: 12px;
+}
+
+.api-step--substep .api-step__category {
+    font-size: 8px;
+}
+
+.api-step--substep .api-step__title {
+    font-size: 10px;
+}
+
+.api-step--substep .api-step__description {
+    margin-top: 2px;
+    font-size: 9px;
+    line-height: 1.25;
+}
+
+.api-step--route {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border-color: color-mix(in oklch, #9b6bff 35%, var(--border));
+    border-radius: 8px;
+    padding: 8px 10px;
+    box-shadow: 0 2px 8px color-mix(in oklch, #9b6bff 9%, transparent);
+}
+
+.api-step--route .api-step__header {
+    gap: 7px;
+    margin-bottom: 2px;
+}
+
+.api-step--route .api-step__icon {
+    width: 16px;
+    height: 16px;
+    background: color-mix(in oklch, #9b6bff 13%, var(--card));
+    color: #8751e8;
+}
+
+.api-step--route .api-step__icon svg {
+    width: 10px;
+    height: 10px;
+}
+
+.api-step--route .api-step__category {
+    font-size: 8px;
+}
+
+.api-step--route .api-step__title {
+    overflow: hidden;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.api-step--route .api-step__description {
+    margin-top: 2px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 9px;
+    line-height: 1.25;
+}
+
+.api-step__method {
+    flex: 0 0 auto;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    background: color-mix(in oklch, currentColor 10%, var(--card));
+    padding: 2px 5px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 8px;
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.api-step__method--get {
+    color: #16834a;
+}
+
+.api-step__method--post {
+    color: #b77908;
+}
+
+.api-step__method--put,
+.api-step__method--patch {
+    color: #3574c4;
+}
+
+.api-step__method--delete {
+    color: #c93431;
+}
+
+.api-step:hover,
+.react-flow__node.selected .api-step {
+    border-color: color-mix(in oklch, var(--primary) 55%, var(--border));
+    box-shadow: 0 7px 20px color-mix(in oklch, var(--foreground) 15%, transparent);
+}
+
+.api-step__header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.api-step__icon {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 7px;
+    background: color-mix(in oklch, var(--primary) 12%, var(--card));
+    color: var(--primary);
+}
+
+.api-step__icon svg {
+    width: 15px;
+    height: 15px;
+}
+
+.api-step__category {
+    min-width: 0;
+    overflow: hidden;
+    flex: 1;
+    color: var(--muted-foreground);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.api-step__env-tag {
+    flex: 0 0 auto;
+    border: 1px solid color-mix(in oklch, #f59e0b 48%, var(--border));
+    border-radius: 4px;
+    background: color-mix(in oklch, #f59e0b 12%, var(--card));
+    padding: 2px 5px;
+    color: color-mix(in oklch, #f59e0b 75%, var(--foreground));
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 8px;
+    font-weight: 650;
+    line-height: 1.2;
+}
+
+.api-step__title {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+.api-step__description {
+    margin: 5px 0 0;
+    color: var(--muted-foreground);
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.api-step--trigger {
+    border-color: color-mix(in oklch, #8b5cf6 55%, var(--border));
+}
+
+.api-step--trigger .api-step__icon {
+    background: color-mix(in oklch, #8b5cf6 14%, var(--card));
+    color: #8b5cf6;
+}
+
+.api-step--condition {
+    border-color: color-mix(in oklch, #f59e0b 75%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in oklch, #f59e0b 38%, transparent),
+        0 0 24px 7px color-mix(in oklch, #f59e0b 28%, transparent);
+}
+
+.api-step--condition:hover,
+.react-flow__node.selected .api-step--condition {
+    box-shadow: 0 0 0 2px color-mix(in oklch, #f59e0b 55%, transparent),
+        0 0 32px 10px color-mix(in oklch, #f59e0b 38%, transparent);
+}
+
+.api-step--condition .api-step__icon {
+    background: color-mix(in oklch, #f59e0b 24%, var(--card));
+    color: #a96300;
+}
+
+.api-step--success {
+    border-color: color-mix(in oklch, #22a06b 78%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in oklch, #22a06b 38%, transparent),
+        0 0 24px 7px color-mix(in oklch, #22a06b 28%, transparent);
+}
+
+.api-step--success:hover,
+.react-flow__node.selected .api-step--success {
+    box-shadow: 0 0 0 2px color-mix(in oklch, #22a06b 55%, transparent),
+        0 0 32px 10px color-mix(in oklch, #22a06b 38%, transparent);
+}
+
+.api-step--success .api-step__icon {
+    background: color-mix(in oklch, #22a06b 24%, var(--card));
+    color: #087343;
+}
+
+.api-step--error {
+    border-color: color-mix(in oklch, #ef6461 78%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in oklch, #ef6461 38%, transparent),
+        0 0 24px 7px color-mix(in oklch, #ef6461 28%, transparent);
+}
+
+.api-step--error:hover,
+.react-flow__node.selected .api-step--error {
+    box-shadow: 0 0 0 2px color-mix(in oklch, #ef6461 55%, transparent),
+        0 0 32px 10px color-mix(in oklch, #ef6461 38%, transparent);
+}
+
+.api-step--error .api-step__icon {
+    background: color-mix(in oklch, #ef6461 24%, var(--card));
+    color: #c93431;
+}
+
+.api-step .react-flow__handle {
+    width: 9px;
+    height: 9px;
+    border: 2px solid var(--card);
+    background: var(--muted-foreground);
+}
+
+.api-step--condition .react-flow__handle.source {
+    background: #d99a17;
+}
+
+.api-flow .react-flow__controls {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    box-shadow: 0 3px 12px color-mix(in oklch, var(--foreground) 10%, transparent);
+}
+
+.api-flow .react-flow__controls-button {
+    width: 30px;
+    height: 30px;
+    border-bottom-color: var(--border);
+    background: var(--card);
+    fill: var(--foreground);
+}
+
+.api-flow .react-flow__controls-button:hover {
+    background: var(--muted);
+}
+
+.api-flow .react-flow__minimap {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.api-flow .react-flow__attribution {
+    display: none;
+}
+
+@media (max-width: 720px) {
+    .flow-page {
+        padding: 4px;
+    }
+
+    .api-step {
+        width: 220px;
+    }
+
+    .api-flow .react-flow__minimap {
+        display: none;
+    }
+}

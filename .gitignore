@@ -1,0 +1,57 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+/frontend/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Local Mesh node identity, peer state, and runtime logs
+/mesh/.mesh_node_id
+/mesh/.mesh_node_name
+/mesh/known_peers.json
+/mesh/meshos.log
+
+# SQLite runtime sidecars
+/backend/data/*.db-shm
+/backend/data/*.db-wal
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Gmail OAuth credentials and tokens
+credentials.json
+token.json
+backend/tools/credentials.json
+backend/tools/token.json
+
+security
+token_*.json
+**/token_*.json
+# Secrets / credentials
+*.env
+.env
+*token*.json
+client_secret*.json
+*credentials*.json
+
+# Local/private data
+captured_photos/
+face_profiles.json
+
+# Local database
+backend/data/API_Store.db

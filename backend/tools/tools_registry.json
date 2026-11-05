@@ -1,0 +1,476 @@
+{
+  "type": "tools",
+  "tools": {
+    "capture_admin_image": {
+      "parameter": {},
+      "description": "Captures a frame from the default webcam, saves it to captured_photos/admin.jpg,\nand returns the image path and status.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\capture_admin_image.py",
+      "module": "backend.tools.capture_admin_image",
+      "function": "capture_admin_image",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "delete_tool": {
+      "parameter": {
+        "tool_name": {
+          "required": true,
+          "type": "str"
+        }
+      },
+      "description": "Delete an unused tool by its name or file name from backend/tools/ and refresh the registry.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\delete_tool.py",
+      "module": "backend.tools.delete_tool",
+      "function": "delete_tool",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "clean_html": {
+      "parameter": {
+        "raw_html": {
+          "required": true
+        }
+      },
+      "description": "",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\dense_web_search.py",
+      "module": "backend.tools.dense_web_search",
+      "function": "clean_html",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "dense_web_search": {
+      "parameter": {
+        "queries": {
+          "required": true
+        },
+        "max_results_per_query": {
+          "required": false,
+          "default": 10
+        },
+        "depth": {
+          "required": false,
+          "default": "normal"
+        }
+      },
+      "description": "Accepts a natural-language research query or a list/string of queries.\nSupports multiple search queries for one research task.\nSearches the web using DuckDuckGo HTML and API fallback.\nCollects results from multiple sources, deduplicates URLs, extracts title, URL, source, snippet, publication date.\nReturns clean structured JSON string or dict.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\dense_web_search.py",
+      "module": "backend.tools.dense_web_search",
+      "function": "dense_web_search",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "search_duckduckgo_api": {
+      "parameter": {
+        "query": {
+          "required": true
+        },
+        "max_results": {
+          "required": false,
+          "default": 10
+        }
+      },
+      "description": "",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\dense_web_search.py",
+      "module": "backend.tools.dense_web_search",
+      "function": "search_duckduckgo_api",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "search_duckduckgo_html": {
+      "parameter": {
+        "query": {
+          "required": true
+        },
+        "max_results": {
+          "required": false,
+          "default": 10
+        }
+      },
+      "description": "",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\dense_web_search.py",
+      "module": "backend.tools.dense_web_search",
+      "function": "search_duckduckgo_html",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "detect_object_in_hand": {
+      "parameter": {},
+      "description": "Captures a frame from the default webcam, crops the hand region (typically lower-center or center),\nsaves the image, and uses simple analysis or returns the image path so the assistant can describe it.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\detect_object_in_hand.py",
+      "module": "backend.tools.detect_object_in_hand",
+      "function": "detect_object_in_hand",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "detect_shirt_color": {
+      "parameter": {},
+      "description": "Captures a frame from the default webcam, detects the dominant color in the \ncentral region of the frame (where the user's shirt typically is), saves the \ncaptured image to disk, and returns a detailed report including the detected shirt color.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\detect_shirt_color.py",
+      "module": "backend.tools.detect_shirt_color",
+      "function": "detect_shirt_color",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "execute_command": {
+      "parameter": {
+        "command": {
+          "required": true,
+          "type": "str",
+          "description": "The shell command to execute. Can be a dense chain of commands."
+        },
+        "timeout": {
+          "required": false,
+          "type": "int",
+          "default": 60,
+          "description": "Timeout in seconds (default 60)."
+        },
+        "cwd": {
+          "required": false,
+          "type": "str",
+          "default": null,
+          "description": "Working directory for the command."
+        }
+      },
+      "description": "Execute a shell command and return stdout, stderr, and return code. Prefer dense multi-command chains using &&, ;, pipes when safe. Use for running code, installing packages, checking status, git operations, etc.",
+      "return": {
+        "type": "dict"
+      },
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\execute_command.py",
+      "module": "backend.tools.execute_command",
+      "function": "execute_command",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "scan_and_compare_face": {
+      "parameter": {},
+      "description": "Captures a frame from the default webcam, detects face mesh landmarks using MediaPipe,\ngenerates a unique normalized embedding/hash (Face ID), saves the reference face ID,\nand then prompts/captures a second frame to compare against the reference face ID\nwith a similarity score and match result.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\face_id_scanner.py",
+      "module": "backend.tools.face_id_scanner",
+      "function": "scan_and_compare_face",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "face_id_scan": {
+      "parameter": {
+        "mode": {
+          "required": false,
+          "default": "scan"
+        },
+        "profile_name": {
+          "required": false,
+          "default": "default"
+        }
+      },
+      "description": "Uses MediaPipe Face Mesh (or robust fallback) to scan a face from the webcam and convert it into a unique ID (face ID),\nor compare a new scan against a stored face ID.\n\nArgs:\n    mode (str): \"scan\" to capture and save face features, or \"compare\" to scan a new face and compare with the stored one.\n    profile_name (str): Identifier for the face profile.\n\nReturns:\n    dict: Status, message, and similarity score (if comparing) or face hash/ID.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\face_id_tool.py",
+      "module": "backend.tools.face_id_tool",
+      "function": "face_id_scan",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "create_tool": {
+      "parameter": {
+        "file_name": {
+          "required": true,
+          "type": "str"
+        },
+        "content": {
+          "required": true,
+          "type": "str"
+        },
+        "mode": {
+          "required": false,
+          "type": "str",
+          "default": "w"
+        }
+      },
+      "description": "Create a new tool file inside backend/tools/ and refresh the registry so it becomes usable immediately.",
+      "return": {
+        "type": "dict"
+      },
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\features.py",
+      "module": "backend.tools.features",
+      "function": "create_tool",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "refresh_tools_registry": {
+      "parameter": {},
+      "description": "Force re-discovery of all tools and update the registry.",
+      "return": {
+        "type": "dict"
+      },
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\features.py",
+      "module": "backend.tools.features",
+      "function": "refresh_tools_registry",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "list_dir": {
+      "parameter": {
+        "dir_path": {
+          "required": false,
+          "type": "str",
+          "default": "."
+        },
+        "max_depth": {
+          "required": false,
+          "type": "int",
+          "default": 2
+        }
+      },
+      "description": "List directory structure up to max_depth. Ignores common junk folders.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\file_ops.py",
+      "module": "backend.tools.file_ops",
+      "function": "list_dir",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "read_file": {
+      "parameter": {
+        "file_path": {
+          "required": true,
+          "type": "str"
+        },
+        "start_line": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "end_line": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Read a file. Optionally return only a line range (1-indexed).\nReturns content + metadata.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\file_ops.py",
+      "module": "backend.tools.file_ops",
+      "function": "read_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "replace_in_file": {
+      "parameter": {
+        "file_path": {
+          "required": true,
+          "type": "str"
+        },
+        "old_text": {
+          "required": true,
+          "type": "str"
+        },
+        "new_text": {
+          "required": true,
+          "type": "str"
+        },
+        "replace_all": {
+          "required": false,
+          "type": "bool",
+          "default": true
+        }
+      },
+      "description": "Replace text in a file. Returns how many replacements were made.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\file_ops.py",
+      "module": "backend.tools.file_ops",
+      "function": "replace_in_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "write_file": {
+      "parameter": {
+        "file_path": {
+          "required": true,
+          "type": "str"
+        },
+        "content": {
+          "required": true,
+          "type": "str"
+        }
+      },
+      "description": "Write content to a file. Creates parent directories if needed.\nOverwrites existing file.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\file_ops.py",
+      "module": "backend.tools.file_ops",
+      "function": "write_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "get_editable_google_sheets": {
+      "parameter": {},
+      "description": "Returns a newline-separated list of Google Spreadsheet names available to edit\nusing the specified OAuth client secret and Google Sheets/Drive scopes.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\get_editable_google_sheets.py",
+      "module": "backend.tools.get_editable_google_sheets",
+      "function": "get_editable_google_sheets",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "get_editable_sheets": {
+      "parameter": {},
+      "description": "List all Google Spreadsheets that are available/accessible to edit using the authenticated Google account and client secret.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\get_editable_sheets.py",
+      "module": "backend.tools.get_editable_sheets",
+      "function": "get_editable_sheets",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "get_weather": {
+      "parameter": {
+        "lat": {
+          "required": true,
+          "type": "float"
+        },
+        "lon": {
+          "required": true,
+          "type": "float"
+        },
+        "days": {
+          "required": false,
+          "type": "int",
+          "default": 3
+        }
+      },
+      "description": "Fetch daily weather forecast from Open-Meteo.\nReturns a dict with keys: date, temperature_max, temperature_min, precipitation_probability, weathercode.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\get_weather.py",
+      "module": "backend.tools.get_weather",
+      "function": "get_weather",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "google_task_manager": {
+      "parameter": {
+        "tasklist_name": {
+          "required": false,
+          "type": "str",
+          "default": "artifect"
+        },
+        "tasks": {
+          "required": false,
+          "type": "List",
+          "default": null
+        }
+      },
+      "description": "Create a Google Tasks tasklist (if it does not exist) and populate it uniquely.\n\nArgs:\n    tasklist_name: Name of the task list to create.\n    tasks: List of task titles to add. If None a default set is used.\n\nReturns:\n    Human‑readable summary of actions performed or error message.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_task_manager.py",
+      "module": "backend.tools.google_task_manager",
+      "function": "google_task_manager",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "list_editable_sheets": {
+      "parameter": {},
+      "description": "Return a newline‑separated list of Google Spreadsheet names that the authenticated user can edit.\nThe function will create/refresh a token file (sheets_token.json) in the same directory as this tool.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\list_editable_sheets.py",
+      "module": "backend.tools.list_editable_sheets",
+      "function": "list_editable_sheets",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "read_id_strap": {
+      "parameter": {},
+      "description": "Captures a frame from the webcam, saves it to captured_photos/id_strap_capture.jpg,\nand returns the image path and status.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\read_id_strap.py",
+      "module": "backend.tools.read_id_strap",
+      "function": "read_id_strap",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "send_email": {
+      "parameter": {
+        "to": {
+          "required": true,
+          "type": "str"
+        },
+        "subject": {
+          "required": true,
+          "type": "str"
+        },
+        "body": {
+          "required": true,
+          "type": "str"
+        }
+      },
+      "description": "Send an email using the authenticated Gmail account. Use this tool when the user explicitly asks to send an email.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\send_email.py",
+      "module": "backend.tools.send_email",
+      "function": "send_email",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "get_drive_service": {
+      "parameter": {},
+      "description": "",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\upload_file_to_drive.py",
+      "module": "backend.tools.upload_file_to_drive",
+      "function": "get_drive_service",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "upload_file_to_drive": {
+      "parameter": {
+        "file_path": {
+          "required": true,
+          "type": "str"
+        },
+        "folder_name": {
+          "required": false,
+          "type": "str",
+          "default": "profile"
+        }
+      },
+      "description": "Uploads a file to Google Drive. If folder_name is provided, it creates the folder\n(or finds it if it already exists) and uploads the file into that folder.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\upload_file_to_drive.py",
+      "module": "backend.tools.upload_file_to_drive",
+      "function": "upload_file_to_drive",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    }
+  }
+}
