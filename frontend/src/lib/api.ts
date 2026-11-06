@@ -73,6 +73,34 @@ export type ToolInfo = {
   module?: string
   status?: string
   error?: string | null
+  assigned_agents?: { id: string; name: string }[]
+}
+
+export type ToolSource = {
+  tool_name: string
+  file_name: string
+  source: string
+  editable: boolean
+  related_tools: string[]
+}
+
+export type AgentProfile = {
+  id: string
+  name: string
+  description: string
+  system_prompt: string
+  tool_names: string[]
+  profile_photo: string | null
+  is_built_in: boolean
+  created_at?: string
+  updated_at?: string
+}
+
+export type AgentTool = {
+  name: string
+  description: string
+  enabled: boolean
+  status: string
 }
 
 export type LogConversation = {

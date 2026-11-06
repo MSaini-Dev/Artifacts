@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+      Private-LAN development profile:
+      Cleartext HTTP is permitted specifically for local network communication with the laptop Mesh node
+      on the trusted LAN (RFC 1918 addresses: 192.168.x.x, 10.x.x.x, 172.16.x.x, and loopback/emulator 10.0.2.2).
+      Production deployments over untrusted networks should always use HTTPS with TLS or a secure private VPN (WireGuard/Tailscale).
+    -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

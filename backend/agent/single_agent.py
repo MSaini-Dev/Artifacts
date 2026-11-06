@@ -23,6 +23,7 @@ from backend.agent.brain_langchain.api_manager.sqlite_logger import (
     create_tool_execution,
     update_tool_execution,
 )
+from backend.agent.agent_profiles import DEFAULT_AGENT_SYSTEM_PROMPT
 from backend.tools.features import get_langchain_tools, refresh_tools_registry
 
 
@@ -250,6 +251,7 @@ def call_agent(
     history: Optional[list] = None,
     log_payload: Optional[dict] = None,
     process_started_at: Optional[float] = None,
+    system_prompt_override: Optional[str] = None,
 ) -> str:
     with conversation_scope(title=user_prompt[:80], conversation_id=conversation_id) as conv_id:
         owns_interaction = active_interactive_id.get() is None
@@ -274,6 +276,7 @@ def call_agent(
                     temperature=temperature,
                     buffer=buffer,
                     history=history,
+                    system_prompt_override=system_prompt_override,
                 )
             except Exception:
                 update_interactive(
@@ -306,6 +309,7 @@ def _call_agent_impl(
     temperature: float = 0.2,
     buffer: int = 0,
     history: Optional[list] = None,
+    system_prompt_override: Optional[str] = None,
 ) -> str:
 
     if tools is None:
@@ -324,27 +328,9 @@ def _call_agent_impl(
             buffer=buffer,
         )
 
-    system_prompt = """You are a highly capable and efficient autonomous coding agent. Environment: Windows.
-
-Core Principles:
-
-1. Prefer dense, high-information actions. When using the shell on Windows, use Windows-compatible commands (e.g. powershell or cmd, avoid unix-only paths like /tmp or commands like head/wc). Chain commands with && or ; when safe. ALWAYS run shell commands non-interactively (e.g. use `npx -y create-vite@latest ...`, `npm install --yes`, etc.)—never run commands that prompt or wait for interactive user input.
-
-2. After writing or modifying any file, VERIFY that the change actually happened (read it back or check with a command).
-
-3. When you create something that should run (server, script, game), try to run it and observe the result.
-
-4. If something fails, read the error carefully and fix it instead of repeating the same failing action.
-
-5. Use the minimum number of tool calls needed. Prefer parallel tool calls when actions are independent.
-
-6. You can create new tools with `create_tool` if you need new capability. After creating, the tool becomes available.
-
-7. Treat implementation, setup, testing, and other explicit action requests as work to execute, not requests for a plan. Do not stop after describing proposed next steps. Continue using tools until the requested work is done and verified, or until a concrete blocker requiring user action is reached.
-
-8. Before claiming completion, compare the user's requested outcomes with tool results. A successful tool call alone does not prove the full task is complete. If anything remains, continue working or clearly report the exact blocker without claiming success.
-
-Be decisive, verify your work, and finish the task cleanly."""
+    system_prompt = DEFAULT_AGENT_SYSTEM_PROMPT
+    if system_prompt_override is not None:
+        system_prompt = system_prompt_override
 
     messages = [SystemMessage(content=system_prompt)]
 

@@ -45,6 +45,26 @@ trusted Windows LAN, run `allow_mesh_firewall.bat` as Administrator on each
 laptop to permit Mesh traffic from the local subnet. Do not expose these ports
 on public networks.
 
+## Tool-RAG orchestration
+
+The Brain stack includes an agent-scoped tool-RAG orchestrator under
+`backend/agent/brain_langchain/orchestration/`. It uses the existing `brain()`
+path for planning, specialist tool loops, and final response composition. See
+the [orchestration README](backend/agent/brain_langchain/orchestration/README.md)
+for configuration, approval requirements, the offline demo, and the test plan.
+
+## Google Workspace tools
+
+The tool registry exposes 31 purpose-specific Google tools for Drive, Gmail,
+Sheets, and Tasks, including email search/read/send, Drive file operations,
+spreadsheet reads/writes, and task/task-list management. Set
+`GOOGLE_OAUTH_CLIENT_SECRETS` to the path of a Google OAuth desktop-client JSON
+file before using them. The first call opens Google's local consent flow and
+saves its token to `backend/tools/google_workspace_token.json`; set
+`GOOGLE_WORKSPACE_TOKEN_PATH` to choose another token path. The OAuth grant
+includes Drive, Gmail, Sheets, and Tasks access so the tools can perform the
+documented read/write operations.
+
 ## Development checks
 
 ```powershell

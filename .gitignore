@@ -55,3 +55,4 @@ face_profiles.json
 
 # Local database
 backend/data/API_Store.db
+.brain_tool_vectors.sqlite3

@@ -325,28 +325,6 @@
       "error": null,
       "enabled": true
     },
-    "get_editable_google_sheets": {
-      "parameter": {},
-      "description": "Returns a newline-separated list of Google Spreadsheet names available to edit\nusing the specified OAuth client secret and Google Sheets/Drive scopes.",
-      "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\get_editable_google_sheets.py",
-      "module": "backend.tools.get_editable_google_sheets",
-      "function": "get_editable_google_sheets",
-      "status": "valid",
-      "error": null,
-      "enabled": true
-    },
-    "get_editable_sheets": {
-      "parameter": {},
-      "description": "List all Google Spreadsheets that are available/accessible to edit using the authenticated Google account and client secret.",
-      "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\get_editable_sheets.py",
-      "module": "backend.tools.get_editable_sheets",
-      "function": "get_editable_sheets",
-      "status": "valid",
-      "error": null,
-      "enabled": true
-    },
     "get_weather": {
       "parameter": {
         "lat": {
@@ -372,46 +350,909 @@
       "error": null,
       "enabled": true
     },
-    "google_task_manager": {
+    "add_task": {
       "parameter": {
-        "tasklist_name": {
+        "tasklist_id": {
+          "required": true,
+          "type": "str"
+        },
+        "title": {
+          "required": true,
+          "type": "str"
+        },
+        "notes": {
           "required": false,
           "type": "str",
-          "default": "artifect"
+          "default": ""
         },
-        "tasks": {
+        "due": {
           "required": false,
-          "type": "List",
+          "type": "str",
+          "default": ""
+        },
+        "parent_task_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "previous_task_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "Add a task to a Google Tasks list, optionally with notes, due date, and parent/order placement.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "add_task",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "batch_read_sheet_values": {
+      "parameter": {
+        "spreadsheet_id": {
+          "required": true,
+          "type": "str"
+        },
+        "ranges": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "value_render_option": {
+          "required": false,
+          "type": "str",
+          "default": "FORMATTED_VALUE"
+        },
+        "data_filters": {
+          "required": false,
+          "type": "Optional",
           "default": null
         }
       },
-      "description": "Create a Google Tasks tasklist (if it does not exist) and populate it uniquely.\n\nArgs:\n    tasklist_name: Name of the task list to create.\n    tasks: List of task titles to add. If None a default set is used.\n\nReturns:\n    Human‑readable summary of actions performed or error message.",
+      "description": "Read multiple A1 ranges or data-filtered ranges from a Google spreadsheet in one request.",
       "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_task_manager.py",
-      "module": "backend.tools.google_task_manager",
-      "function": "google_task_manager",
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "batch_read_sheet_values",
       "status": "valid",
       "error": null,
       "enabled": true
     },
-    "list_editable_sheets": {
-      "parameter": {},
-      "description": "Return a newline‑separated list of Google Spreadsheet names that the authenticated user can edit.\nThe function will create/refresh a token file (sheets_token.json) in the same directory as this tool.",
+    "batch_update_sheet": {
+      "parameter": {
+        "spreadsheet_id": {
+          "required": true,
+          "type": "str"
+        },
+        "body": {
+          "required": true,
+          "type": "dict"
+        },
+        "value_input_option": {
+          "required": false,
+          "type": "str",
+          "default": "USER_ENTERED"
+        },
+        "operation": {
+          "required": false,
+          "type": "Literal",
+          "default": "values"
+        }
+      },
+      "description": "Batch update cell values, data-filtered values, or spreadsheet formatting/properties.",
       "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\list_editable_sheets.py",
-      "module": "backend.tools.list_editable_sheets",
-      "function": "list_editable_sheets",
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "batch_update_sheet",
       "status": "valid",
       "error": null,
       "enabled": true
     },
-    "read_id_strap": {
-      "parameter": {},
-      "description": "Captures a frame from the webcam, saves it to captured_photos/id_strap_capture.jpg,\nand returns the image path and status.",
+    "clear_sheet_values": {
+      "parameter": {
+        "spreadsheet_id": {
+          "required": true,
+          "type": "str"
+        },
+        "range": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "ranges": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "data_filters": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Clear one A1 range, multiple ranges, or data-filtered ranges without deleting formatting.",
       "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\read_id_strap.py",
-      "module": "backend.tools.read_id_strap",
-      "function": "read_id_strap",
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "clear_sheet_values",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "create_read_spreadsheet": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "spreadsheet_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "title": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "data_filters": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Create a Google spreadsheet or read its metadata; operation is create, get, or get_by_data_filter.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "create_read_spreadsheet",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "create_tasklist": {
+      "parameter": {
+        "title": {
+          "required": true,
+          "type": "str"
+        }
+      },
+      "description": "Create a Google Tasks task list with the requested title.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "create_tasklist",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "delete_restore_drive_file": {
+      "parameter": {
+        "file_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "operation": {
+          "required": false,
+          "type": "Literal",
+          "default": "trash"
+        },
+        "confirm_permanent": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        }
+      },
+      "description": "Trash/restore/delete a file or empty trash; permanent_delete and empty_trash require confirm_permanent=true.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "delete_restore_drive_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "delete_task": {
+      "parameter": {
+        "tasklist_id": {
+          "required": true,
+          "type": "str"
+        },
+        "task_id": {
+          "required": true,
+          "type": "str"
+        },
+        "confirm_delete": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        }
+      },
+      "description": "Permanently delete a Google Tasks task; requires confirm_delete=true.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "delete_task",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "download_export_drive_file": {
+      "parameter": {
+        "file_id": {
+          "required": true,
+          "type": "str"
+        },
+        "destination_path": {
+          "required": true,
+          "type": "str"
+        },
+        "export_mime_type": {
+          "required": false,
+          "type": "str",
+          "default": "application/pdf"
+        }
+      },
+      "description": "Download a Drive file or export a Google Workspace file to a local destination path.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "download_export_drive_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "get_mailbox_activity": {
+      "parameter": {
+        "operation": {
+          "required": false,
+          "type": "Literal",
+          "default": "profile"
+        },
+        "start_history_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "history_types": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "watch_body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Get mailbox profile/history or start/stop Gmail push notifications; watch requires watch_body with a topic.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "get_mailbox_activity",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "list_tasks": {
+      "parameter": {
+        "tasklist_id": {
+          "required": true,
+          "type": "str"
+        },
+        "show_completed": {
+          "required": false,
+          "type": "bool",
+          "default": true
+        },
+        "show_hidden": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        },
+        "page_token": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "List tasks in a Google Tasks list, including optional completed/hidden tasks and pagination.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "list_tasks",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_drive_comments": {
+      "parameter": {
+        "file_id": {
+          "required": true,
+          "type": "str"
+        },
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "comment_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "reply_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Manage Drive comments and replies; operation selects list/create/get/update/delete for comments or replies.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_drive_comments",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_drive_permissions": {
+      "parameter": {
+        "file_id": {
+          "required": true,
+          "type": "str"
+        },
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "permission_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Manage Drive sharing; operation is list, get, create, update, or delete. Create/update use body as a permission.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_drive_permissions",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_drive_revisions": {
+      "parameter": {
+        "file_id": {
+          "required": true,
+          "type": "str"
+        },
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "revision_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "include_content": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        }
+      },
+      "description": "List, read, update, or delete Drive file revisions; set include_content to download revision bytes.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_drive_revisions",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_email_drafts": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "draft_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "to": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "subject": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "cc": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "bcc": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "Create, list, read, update, delete, or send Gmail drafts; operation selects the draft action.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_email_drafts",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_email_labels": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "label_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        }
+      },
+      "description": "Create, list, read, update, patch, or delete Gmail labels; operation selects the label action.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_email_labels",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_email_messages": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "message_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "message_ids": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "add_label_ids": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "remove_label_ids": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "thread_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "raw_message": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "never_mark_spam": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        },
+        "process_for_calendar": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        },
+        "internal_date_source": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "confirm_permanent": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        }
+      },
+      "description": "Modify/trash/restore/delete messages or threads, batch-update messages, or import/insert raw mail; permanent deletes require confirmation.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_email_messages",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_gmail_settings": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "item_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "setting_type": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "email_address": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "key_pair_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "smime_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "Manage Gmail settings; operation explicitly selects filters, forwarding, aliases, delegates, IMAP/POP, S/MIME, or CSE.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_gmail_settings",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_shared_drives_and_access": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "drive_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "file_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "proposal_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "approval_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "page_token": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "app_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "operation_name": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "request_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "confirm_permanent": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        }
+      },
+      "description": "Manage Drive account/shared-drive resources; operation selects about/apps/drives/access proposals/approvals/changes.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_shared_drives_and_access",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_sheets_and_metadata": {
+      "parameter": {
+        "spreadsheet_id": {
+          "required": true,
+          "type": "str"
+        },
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "sheet_id": {
+          "required": false,
+          "type": "int",
+          "default": 0
+        },
+        "title": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "metadata_id": {
+          "required": false,
+          "type": "int",
+          "default": 0
+        }
+      },
+      "description": "Manage spreadsheet tabs and developer metadata; operation selects tab or metadata create/get/search/update/delete.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_sheets_and_metadata",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "manage_tasklists": {
+      "parameter": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "tasklist_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "title": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "page_token": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "confirm_delete": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        }
+      },
+      "description": "List, read, rename, or delete a task list; delete requires confirm_delete=true because its tasks are also removed.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "manage_tasklists",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "read_drive_file": {
+      "parameter": {
+        "file_id": {
+          "required": true,
+          "type": "str"
+        },
+        "include_content": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        },
+        "export_mime_type": {
+          "required": false,
+          "type": "str",
+          "default": "text/plain"
+        }
+      },
+      "description": "Read Drive file metadata, and optionally its text content or exported Google Workspace content.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "read_drive_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "read_email": {
+      "parameter": {
+        "message_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "thread_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "format": {
+          "required": false,
+          "type": "Literal",
+          "default": "full"
+        },
+        "attachment_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "Read a Gmail message/thread or an attachment; provide exactly one message_id or thread_id (message_id for attachments).",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "read_email",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "read_sheet_values": {
+      "parameter": {
+        "spreadsheet_id": {
+          "required": true,
+          "type": "str"
+        },
+        "range": {
+          "required": true,
+          "type": "str"
+        },
+        "value_render_option": {
+          "required": false,
+          "type": "str",
+          "default": "FORMATTED_VALUE"
+        }
+      },
+      "description": "Read values from a Google Sheets A1 range.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "read_sheet_values",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "search_drive_files": {
+      "parameter": {
+        "query": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "page_size": {
+          "required": false,
+          "type": "int",
+          "default": 20
+        },
+        "page_token": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "operation": {
+          "required": false,
+          "type": "Literal",
+          "default": "list"
+        },
+        "count": {
+          "required": false,
+          "type": "int",
+          "default": 10
+        }
+      },
+      "description": "Search/list files, generate IDs, or get a changes start token; operation is list, generate_ids, or get_start_page_token.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "search_drive_files",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "search_emails": {
+      "parameter": {
+        "query": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "page_size": {
+          "required": false,
+          "type": "int",
+          "default": 20
+        },
+        "page_token": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "include_spam_trash": {
+          "required": false,
+          "type": "bool",
+          "default": false
+        },
+        "resource": {
+          "required": false,
+          "type": "Literal",
+          "default": "messages"
+        }
+      },
+      "description": "Search Gmail messages or threads with Gmail query syntax; resource is messages or threads.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "search_emails",
       "status": "valid",
       "error": null,
       "enabled": true
@@ -429,45 +1270,204 @@
         "body": {
           "required": true,
           "type": "str"
+        },
+        "cc": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "bcc": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "attachments": {
+          "required": false,
+          "type": "Optional",
+          "default": null
         }
       },
-      "description": "Send an email using the authenticated Gmail account. Use this tool when the user explicitly asks to send an email.",
+      "description": "Send an email through Gmail, optionally with comma-separated Cc/Bcc recipients and local file attachments.",
       "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\send_email.py",
-      "module": "backend.tools.send_email",
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
       "function": "send_email",
       "status": "valid",
       "error": null,
       "enabled": true
     },
-    "get_drive_service": {
-      "parameter": {},
-      "description": "",
+    "update_complete_task": {
+      "parameter": {
+        "tasklist_id": {
+          "required": true,
+          "type": "str"
+        },
+        "task_id": {
+          "required": true,
+          "type": "str"
+        },
+        "operation": {
+          "required": false,
+          "type": "Literal",
+          "default": "complete"
+        },
+        "title": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "notes": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "due": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "Complete, reopen, or update a Google Tasks task; operation is complete, reopen, or update.",
       "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\upload_file_to_drive.py",
-      "module": "backend.tools.upload_file_to_drive",
-      "function": "get_drive_service",
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "update_complete_task",
       "status": "valid",
       "error": null,
       "enabled": true
     },
-    "upload_file_to_drive": {
+    "update_move_copy_drive_file": {
       "parameter": {
-        "file_path": {
+        "file_id": {
           "required": true,
           "type": "str"
         },
-        "folder_name": {
+        "operation": {
+          "required": true,
+          "type": "Literal"
+        },
+        "name": {
           "required": false,
           "type": "str",
-          "default": "profile"
+          "default": ""
+        },
+        "add_parent_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "remove_parent_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "local_file_path": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "destination_parent_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "label_modifications": {
+          "required": false,
+          "type": "Optional",
+          "default": null
+        },
+        "channel_body": {
+          "required": false,
+          "type": "Optional",
+          "default": null
         }
       },
-      "description": "Uploads a file to Google Drive. If folder_name is provided, it creates the folder\n(or finds it if it already exists) and uploads the file into that folder.",
+      "description": "Update, move, replace content, copy, list/modify labels, or watch a Drive file; set operation accordingly.",
       "return": {},
-      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\upload_file_to_drive.py",
-      "module": "backend.tools.upload_file_to_drive",
-      "function": "upload_file_to_drive",
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "update_move_copy_drive_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "upload_create_drive_file": {
+      "parameter": {
+        "name": {
+          "required": true,
+          "type": "str"
+        },
+        "mime_type": {
+          "required": false,
+          "type": "str",
+          "default": "application/octet-stream"
+        },
+        "parent_id": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "local_file_path": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        },
+        "content": {
+          "required": false,
+          "type": "str",
+          "default": ""
+        }
+      },
+      "description": "Create a Drive folder/file or upload a local file; provide local_file_path or text content for file uploads.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "upload_create_drive_file",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "write_sheet_values": {
+      "parameter": {
+        "spreadsheet_id": {
+          "required": true,
+          "type": "str"
+        },
+        "range": {
+          "required": true,
+          "type": "str"
+        },
+        "values": {
+          "required": true,
+          "type": "list"
+        },
+        "operation": {
+          "required": false,
+          "type": "Literal",
+          "default": "update"
+        },
+        "value_input_option": {
+          "required": false,
+          "type": "str",
+          "default": "USER_ENTERED"
+        }
+      },
+      "description": "Write cell values to a range or append rows; operation is update or append.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\google_workspace.py",
+      "module": "backend.tools.google_workspace",
+      "function": "write_sheet_values",
+      "status": "valid",
+      "error": null,
+      "enabled": true
+    },
+    "read_id_strap": {
+      "parameter": {},
+      "description": "Captures a frame from the webcam, saves it to captured_photos/id_strap_capture.jpg,\nand returns the image path and status.",
+      "return": {},
+      "path": "E:\\Personal\\Code\\Project\\Assistant\\artifacts\\backend\\tools\\read_id_strap.py",
+      "module": "backend.tools.read_id_strap",
+      "function": "read_id_strap",
       "status": "valid",
       "error": null,
       "enabled": true

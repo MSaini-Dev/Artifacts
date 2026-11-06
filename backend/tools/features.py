@@ -6,10 +6,12 @@ and converts tools into LangChain StructuredTools.
 
 from __future__ import annotations
 
+import ast
 import importlib.util
 import inspect
 import json
 import logging
+import re
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -58,8 +60,16 @@ def create_tool(file_name: str, content: str, mode: str = "w") -> dict:
     Create or overwrite a new tool file inside backend/tools/ and refresh registry.
     After creation the new tool becomes immediately available.
     """
+    if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\.py)?", file_name):
+        return {"success": False, "error": "Use a simple Python module name without a path."}
     if not file_name.endswith(".py"):
         file_name += ".py"
+    if file_name == "features.py":
+        return {"success": False, "error": "The tool registry module cannot be overwritten."}
+    try:
+        ast.parse(content, filename=file_name)
+    except SyntaxError as exc:
+        return {"success": False, "error": f"Invalid Python syntax: {exc}"}
 
     path = TOOLS_DIR / file_name
 
@@ -80,6 +90,91 @@ def create_tool(file_name: str, content: str, mode: str = "w") -> dict:
         }
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+
+def get_tool_source(tool_name: str) -> dict:
+    """Return a tool's source file and all tools defined in that file."""
+    registry = load_registry(force=True)
+    tools = registry.get("tools", {})
+    info = tools.get(tool_name)
+    if not isinstance(info, dict):
+        raise KeyError(tool_name)
+
+    path = _managed_tool_path(info)
+    return {
+        "tool_name": tool_name,
+        "file_name": path.name,
+        "source": path.read_text(encoding="utf-8"),
+        "editable": path.name != "features.py",
+        "related_tools": sorted(
+            name
+            for name, item in tools.items()
+            if isinstance(item, dict) and item.get("path") == str(path)
+        ),
+    }
+
+
+def update_tool_source(tool_name: str, content: str) -> dict:
+    """Validate and replace the Python source for a registered tool."""
+    registry = load_registry(force=True)
+    tools = registry.get("tools", {})
+    info = tools.get(tool_name)
+    if not isinstance(info, dict):
+        raise KeyError(tool_name)
+
+    path = _managed_tool_path(info)
+    if path.name == "features.py":
+        raise ValueError("The tool registry source cannot be edited here.")
+    try:
+        ast.parse(content, filename=path.name)
+    except SyntaxError as exc:
+        raise ValueError(f"Invalid Python syntax: {exc}") from exc
+
+    temporary_path = path.with_suffix(path.suffix + ".tmp")
+    try:
+        temporary_path.write_text(content, encoding="utf-8")
+        temporary_path.replace(path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+    refreshed = refresh_tools_registry()
+    related_tools = sorted(
+        name
+        for name, item in refreshed.items()
+        if isinstance(item, dict) and item.get("path") == str(path)
+    )
+    return {"success": True, "updated_tools": related_tools}
+
+
+def delete_tool_file(tool_name: str) -> dict:
+    """Delete the local Python file backing a registered tool."""
+    registry = load_registry(force=True)
+    tools = registry.get("tools", {})
+    info = tools.get(tool_name)
+    if not isinstance(info, dict):
+        raise KeyError(tool_name)
+
+    path = _managed_tool_path(info)
+    if path.name == "features.py":
+        raise ValueError("The tool registry source cannot be deleted.")
+    related_tools = sorted(
+        name
+        for name, item in tools.items()
+        if isinstance(item, dict) and item.get("path") == str(path)
+    )
+    path.unlink()
+    refresh_tools_registry()
+    return {"success": True, "deleted_tools": related_tools}
+
+
+def _managed_tool_path(info: dict) -> Path:
+    raw_path = info.get("path")
+    if not isinstance(raw_path, str):
+        raise ValueError("Tool does not have a managed Python source file.")
+    path = Path(raw_path).resolve()
+    if path.parent != TOOLS_DIR.resolve() or path.suffix != ".py" or not path.is_file():
+        raise ValueError("Tool source is outside the managed tools directory.")
+    return path
 
 
 def load_registry(force: bool = False) -> dict:

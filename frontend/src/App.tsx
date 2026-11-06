@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import CodeMirror from "@uiw/react-codemirror"
+import { python } from "@codemirror/lang-python"
+import { oneDark } from "@codemirror/theme-one-dark"
 import {
   Activity,
   Brain,
@@ -13,9 +16,11 @@ import {
   Database,
   FilePlus2,
   GitBranch,
+  Grid2X2,
   History,
   KeyRound,
   LoaderCircle,
+  List,
   Maximize2,
   MessageSquare,
   Minimize2,
@@ -34,7 +39,9 @@ import {
   Server,
   Sun,
   Trash2,
+  Users,
   Wrench,
+  X,
   type LucideIcon,
 } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -43,6 +50,7 @@ import {
   apiRequest,
   jsonBody,
   type ApiKey,
+  type AgentProfile,
   type ChatMessage,
   type Conversation,
   type LogConversation,
@@ -55,6 +63,7 @@ import {
   type LogTask,
   type LogToolExecution,
   type ToolInfo,
+  type ToolSource,
 } from "@/lib/api"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -98,6 +107,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Toaster } from "@/components/ui/sonner"
 import WorkflowPage from "@/components/WorkflowPage"
 import MeshPage from "@/components/MeshPage"
+import AgentsPage from "@/components/AgentsPage"
 import "./components/MeshPage.css"
 import {
   Tooltip,
@@ -106,7 +116,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-type Page = "chat" | "mesh" | "tools" | "db" | "logs" | "flow"
+type Page = "chat" | "agents" | "mesh" | "tools" | "db" | "logs" | "flow"
 type EntityKind = "provider" | "model" | "key"
 type EntityRecord = Provider | Model | ApiKey
 type EntityForm = Record<string, string>
@@ -123,6 +133,7 @@ type ActivitySocketEvent = {
 
 const navigation: { id: Page; label: string; icon: LucideIcon }[] = [
   { id: "chat", label: "Chat", icon: MessageSquare },
+  { id: "agents", label: "Agents", icon: Users },
   { id: "mesh", label: "Mesh", icon: Network },
   { id: "tools", label: "Tools", icon: Wrench },
   { id: "db", label: "Database", icon: Database },
@@ -137,6 +148,7 @@ function pageFromHash(): Page {
 
 const pageCopy: Record<Page, { title: string; description: string }> = {
   chat: { title: "Chat", description: "Talk to your assistant or hand off a task." },
+  agents: { title: "Agents", description: "Manage agent profiles, system prompts, and assigned tools." },
   mesh: { title: "Mesh", description: "A split workspace with a dedicated assistant chat." },
   tools: { title: "Tools", description: "Inspect registered tools and run them on demand." },
   db: { title: "Database", description: "Manage providers, models, and environment key references." },
@@ -677,6 +689,8 @@ function App() {
   const [renameTitle, setRenameTitle] = useState("")
   const [chatText, setChatText] = useState("")
   const [chatMode, setChatMode] = useState("agent")
+  const [agentProfiles, setAgentProfiles] = useState<AgentProfile[]>([])
+  const [selectedAgentId, setSelectedAgentId] = useState("assistant")
   const [temperature, setTemperature] = useState("0.2")
   const [maxTurns, setMaxTurns] = useState("20")
   const [sending, setSending] = useState(false)
@@ -688,7 +702,15 @@ function App() {
   const liveToolActivityRef = useRef<LogToolExecution[]>([])
 
   const [tools, setTools] = useState<Record<string, ToolInfo>>({})
+  const [toolSource, setToolSource] = useState<ToolSource | null>(null)
+  const [toolSourceDraft, setToolSourceDraft] = useState("")
+  const [toolSourceEditing, setToolSourceEditing] = useState(false)
+  const [toolSourceLoading, setToolSourceLoading] = useState(false)
+  const [toolSourceSaving, setToolSourceSaving] = useState(false)
+  const [assigningToolAgent, setAssigningToolAgent] = useState(false)
   const [toolSearch, setToolSearch] = useState("")
+  const [toolFilter, setToolFilter] = useState("all")
+  const [toolViewMode, setToolViewMode] = useState<"grid" | "list">("grid")
   const [selectedTool, setSelectedTool] = useState("")
   const [toolArgs, setToolArgs] = useState<Record<string, string>>({})
   const [toolJsonMode, setToolJsonMode] = useState(false)
@@ -888,6 +910,21 @@ function App() {
     }
   }, [selectedTool])
 
+  const loadAgentProfiles = useCallback(async () => {
+    try {
+      const result = await apiRequest<{ agents: AgentProfile[] }>("/api/agents")
+      setAgentProfiles(result.agents)
+      setSelectedAgentId((current) =>
+        result.agents.some((profile) => profile.id === current)
+          ? current
+          : result.agents[0]?.id ?? "",
+      )
+      setApiError(null)
+    } catch (error) {
+      toast.error(`Could not load agents: ${messageOf(error)}`)
+    }
+  }, [])
+
   const loadLogs = useCallback(async () => {
     try {
       setLogConversations(await apiRequest<LogConversation[]>("/api/logs/conversations?limit=25"))
@@ -900,13 +937,47 @@ function App() {
   useEffect(() => {
     void loadStats()
     void loadConversations()
-  }, [loadConversations, loadStats])
+    void loadAgentProfiles()
+  }, [loadAgentProfiles, loadConversations, loadStats])
 
   useEffect(() => {
     if (page === "tools") void loadTools()
+    if (page === "agents") {
+      void loadAgentProfiles()
+      void loadTools()
+    }
     if (page === "db") void loadDatabase()
     if (page === "logs") void loadLogs()
-  }, [loadDatabase, loadLogs, loadTools, page])
+  }, [loadAgentProfiles, loadDatabase, loadLogs, loadTools, page])
+
+  useEffect(() => {
+    if (page !== "tools" || !selectedTool) {
+      setToolSource(null)
+      setToolSourceEditing(false)
+      return
+    }
+
+    let cancelled = false
+    setToolSourceLoading(true)
+    setToolSource(null)
+    setToolSourceEditing(false)
+    void apiRequest<ToolSource>(`/api/tools/${encodeURIComponent(selectedTool)}/source`)
+      .then((source) => {
+        if (cancelled) return
+        setToolSource(source)
+        setToolSourceDraft(source.source)
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) toast.error(`Could not load tool source: ${messageOf(error)}`)
+      })
+      .finally(() => {
+        if (!cancelled) setToolSourceLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [page, selectedTool])
 
   useEffect(() => {
     if (activeConversationId === null && conversations.length > 0) {
@@ -918,7 +989,7 @@ function App() {
 
   const refreshAll = async () => {
     setRefreshing(true)
-    await Promise.all([loadStats(), loadConversations(), loadTools(), loadDatabase(), loadLogs()])
+    await Promise.all([loadStats(), loadConversations(), loadTools(), loadDatabase(), loadLogs(), loadAgentProfiles()])
     setRefreshing(false)
     toast.success("Workspace refreshed")
   }
@@ -1029,6 +1100,7 @@ function App() {
           temperature: Number(temperature) || 0.2,
           max_turns: Number(maxTurns) || 20,
           conversation_id: conversationId,
+          agent_id: requestMode === "agent" ? selectedAgentId : undefined,
         }),
       })
 
@@ -1204,6 +1276,71 @@ function App() {
     }
   }
 
+  const saveToolSource = async () => {
+    if (!selectedTool || !toolSource) return
+    setToolSourceSaving(true)
+    try {
+      await apiRequest(`/api/tools/${encodeURIComponent(selectedTool)}/source`, {
+        method: "PUT",
+        body: jsonBody({ content: toolSourceDraft }),
+      })
+      setToolSource({ ...toolSource, source: toolSourceDraft })
+      setToolSourceEditing(false)
+      await loadTools()
+      toast.success(`Saved ${toolSource.file_name}`)
+    } catch (error) {
+      toast.error(`Could not save tool source: ${messageOf(error)}`)
+    } finally {
+      setToolSourceSaving(false)
+    }
+  }
+
+  const deleteTool = async () => {
+    if (!selectedTool) return
+    const relatedTools = toolSource?.related_tools || [selectedTool]
+    const affectedNames = relatedTools.join(", ")
+    if (!window.confirm(`Delete ${toolSource?.file_name || selectedTool}? This removes the source for: ${affectedNames}.`)) return
+
+    try {
+      await apiRequest(`/api/tools/${encodeURIComponent(selectedTool)}`, { method: "DELETE" })
+      setToolSource(null)
+      setToolSourceEditing(false)
+      setSelectedTool("")
+      await Promise.all([loadTools(), loadAgentProfiles(), loadStats()])
+      toast.success(`Deleted ${toolSource?.file_name || selectedTool}`)
+    } catch (error) {
+      toast.error(`Could not delete tool: ${messageOf(error)}`)
+    }
+  }
+
+  const setToolAgentAssignment = async (agentId: string, assigned: boolean) => {
+    if (!selectedTool || !selectedToolInfo || assigningToolAgent) return
+    const existingIds = (selectedToolInfo.assigned_agents || []).map((agent) => agent.id)
+    const nextIds = assigned
+      ? [...new Set([...existingIds, agentId])]
+      : existingIds.filter((id) => id !== agentId)
+    setAssigningToolAgent(true)
+    try {
+      const result = await apiRequest<{
+        success: boolean
+        assigned_agents: { id: string; name: string }[]
+      }>(`/api/tools/${encodeURIComponent(selectedTool)}/agents`, {
+        method: "PUT",
+        body: jsonBody({ agent_ids: nextIds }),
+      })
+      setTools((current) => ({
+        ...current,
+        [selectedTool]: { ...current[selectedTool], assigned_agents: result.assigned_agents },
+      }))
+      await loadAgentProfiles()
+      toast.success(`Updated agent access for ${selectedTool}`)
+    } catch (error) {
+      toast.error(`Could not update agent access: ${messageOf(error)}`)
+    } finally {
+      setAssigningToolAgent(false)
+    }
+  }
+
   const openEntityEditor = (kind: EntityKind, record?: EntityRecord) => {
     setEditingEntity({ kind, record })
     if (kind === "provider") {
@@ -1344,9 +1481,14 @@ function App() {
   const filteredTools = useMemo(() => {
     const query = toolSearch.trim().toLowerCase()
     return Object.entries(tools).filter(([name, info]) =>
-      (!query || `${name} ${info.description || ""}`.toLowerCase().includes(query)),
+      (!query || `${name} ${info.description || ""}`.toLowerCase().includes(query))
+      && (toolFilter === "all"
+        || (toolFilter === "enabled" && info.enabled !== false)
+        || (toolFilter === "disabled" && info.enabled === false)
+        || (info.assigned_agents || []).some((agent) => agent.id === toolFilter)
+        || agentProfiles.some((profile) => profile.id === toolFilter && profile.tool_names.includes("*"))),
     )
-  }, [toolSearch, tools])
+  }, [agentProfiles, toolFilter, toolSearch, tools])
 
   const filteredProviders = useMemo(() => {
     const query = dbSearch.providers.trim().toLowerCase()
@@ -1462,6 +1604,212 @@ function App() {
       </Dialog>
     )
   }
+
+  const selectedToolVisible = filteredTools.some(([name]) => name === selectedTool)
+  const selectedToolDetails = selectedToolInfo && selectedToolVisible ? (
+    <div className="flex min-h-0 flex-col gap-4">
+      <Card>
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0 space-y-1">
+              <CardTitle className="break-all">{selectedTool}</CardTitle>
+              <CardDescription>{selectedToolInfo.description || "No description available."}</CardDescription>
+            </div>
+            <Badge variant={selectedToolInfo.status === "valid" ? "default" : "destructive"}>{selectedToolInfo.status || "unknown"}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="grid gap-5">
+          <div>
+            {agentProfiles.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No agent profiles are available.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {agentProfiles.map((profile) => {
+                  const assigned = profile.tool_names.includes("*")
+                    || (selectedToolInfo.assigned_agents || []).some((agent) => agent.id === profile.id)
+                  return (
+                    <Button
+                      key={profile.id}
+                      type="button"
+                      size="sm"
+                      variant={assigned ? "secondary" : "outline"}
+                      className={`rounded-full ${
+                        assigned
+                          ? "border-white bg-white text-black hover:bg-white/90 hover:text-black"
+                          : "border-white bg-black text-white hover:bg-white/10 hover:text-white"
+                      }`}
+                      aria-pressed={assigned}
+                      aria-label={`${assigned ? "Remove" : "Add"} ${selectedTool} ${assigned ? "from" : "to"} ${profile.name}`}
+                      disabled={assigningToolAgent}
+                      onClick={() => void setToolAgentAssignment(profile.id, !assigned)}
+                    >
+                      <span>{profile.name}</span>
+                      <span aria-hidden="true" className={`-mr-1 ml-1.5 flex size-5 items-center justify-center border-l ${assigned ? "border-black/20" : "border-white/30"}`}>
+                        {assigned ? <X className="size-3.5" /> : <Plus className="size-3.5" />}
+                      </span>
+                    </Button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-medium">Arguments</h3>
+            <Button variant="outline" size="sm" onClick={() => {
+              if (!toolJsonMode) setToolJson(JSON.stringify(Object.fromEntries(Object.entries(toolArgs).map(([key, value]) => [key, value])), null, 2))
+              else {
+                try {
+                  const parsed = JSON.parse(toolJson) as Record<string, unknown>
+                  setToolArgs(Object.fromEntries(Object.entries(parsed).map(([key, value]) => [key, String(value)])))
+                } catch (error) {
+                  toast.error(`Invalid JSON: ${messageOf(error)}`)
+                  return
+                }
+              }
+              setToolJsonMode((value) => !value)
+            }}>
+              <Code2 /> {toolJsonMode ? "Form mode" : "JSON mode"}
+            </Button>
+          </div>
+          {toolJsonMode ? (
+            <Textarea className="min-h-40 font-mono text-xs" value={toolJson} onChange={(event) => setToolJson(event.target.value)} aria-label="Tool arguments JSON" />
+          ) : Object.keys(selectedToolInfo.parameter || {}).length === 0 ? (
+            <p className="text-sm text-muted-foreground">This tool does not require arguments.</p>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {Object.entries(selectedToolInfo.parameter || {}).map(([key, info]) => (
+                <Field key={key} label={`${key}${info.required === false ? " (optional)" : ""}`} htmlFor={`tool-arg-${key}`}>
+                  <Input
+                    id={`tool-arg-${key}`}
+                    type={["int", "integer", "float", "number"].includes((info.type || "").toLowerCase()) ? "number" : "text"}
+                    value={toolArgs[key] || ""}
+                    placeholder={info.type || "Enter a value"}
+                    onChange={(event) => setToolArgs((current) => ({ ...current, [key]: event.target.value }))}
+                  />
+                </Field>
+              ))}
+            </div>
+          )}
+          <div className="flex justify-end">
+            <Button onClick={() => void executeTool()} disabled={runningTool || selectedToolInfo.status !== "valid"}>
+              {runningTool ? <LoaderCircle className="animate-spin" /> : <Play />}
+              {runningTool ? "Running…" : "Run tool"}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex-row items-start justify-between gap-3">
+          <div className="min-w-0">
+            <CardTitle>Python source</CardTitle>
+            <CardDescription>
+              {toolSourceLoading
+                ? "Loading source…"
+                : toolSource
+                  ? `${toolSource.file_name}${toolSource.related_tools.length > 1 ? ` · also defines ${toolSource.related_tools.filter((name) => name !== selectedTool).join(", ")}` : ""}`
+                  : "Source is unavailable."}
+            </CardDescription>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            {toolSourceEditing ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setToolSourceDraft(toolSource?.source || "")
+                    setToolSourceEditing(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={() => void saveToolSource()} disabled={toolSourceSaving || toolSourceDraft === toolSource?.source}>
+                  {toolSourceSaving ? <LoaderCircle className="animate-spin" /> : <Check />}
+                  Save code
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setToolSourceEditing(true)}
+                  disabled={!toolSource?.editable || toolSourceLoading}
+                >
+                  <Pencil /> Edit code
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  aria-label={`Delete ${selectedTool}`}
+                  title="Delete tool source"
+                  onClick={() => void deleteTool()}
+                  disabled={!toolSource?.editable}
+                >
+                  <Trash2 />
+                </Button>
+              </>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-hidden rounded-lg border">
+            <CodeMirror
+              value={toolSourceEditing ? toolSourceDraft : toolSource?.source || ""}
+              height={toolSourceEditing ? "32rem" : undefined}
+              minHeight="6rem"
+              maxHeight="32rem"
+              extensions={[python()]}
+              theme={resolvedTheme === "dark" ? oneDark : "light"}
+              editable={toolSourceEditing}
+              readOnly={!toolSourceEditing}
+              aria-label="Tool Python source"
+              onChange={(value) => setToolSourceDraft(value)}
+              basicSetup={{
+                lineNumbers: true,
+                foldGutter: true,
+                highlightActiveLine: toolSourceEditing,
+                autocompletion: true,
+              }}
+            />
+            {!toolSource && !toolSourceLoading && (
+              <p className="p-4 text-sm text-muted-foreground">Source is unavailable.</p>
+            )}
+          </div>
+          {toolSource && !toolSource.editable && (
+            <p className="mt-2 text-xs text-muted-foreground">This is a built-in registry tool; its source cannot be edited or deleted here.</p>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex-row items-center justify-between">
+          <div>
+            <CardTitle>Execution output</CardTitle>
+            <CardDescription>Tool results appear here.</CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            {toolRunStatus && <StatusBadge status={toolRunStatus} />}
+            {toolDuration !== null && <span className="text-xs text-muted-foreground">{toolDuration} ms</span>}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <pre className="max-h-80 min-h-20 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-muted p-4 font-mono text-xs leading-5">{toolOutput || "Ready to execute."}</pre>
+        </CardContent>
+      </Card>
+    </div>
+  ) : (
+    <Card className="flex min-h-56 items-center justify-center">
+      <EmptyState
+        icon={Wrench}
+        title={filteredTools.length ? "Select a tool" : "No tools found"}
+        description={filteredTools.length
+          ? "Choose a registered tool to inspect its arguments and run it."
+          : "Try another search or filter to find a registered tool."}
+      />
+    </Card>
+  )
 
   return (
     <TooltipProvider delayDuration={100}>
@@ -1632,6 +1980,24 @@ function App() {
                         <SelectItem value="direct">Direct model</SelectItem>
                       </SelectContent>
                     </Select>
+                    {chatMode === "agent" && (
+                      <Select
+                        value={selectedAgentId}
+                        onValueChange={setSelectedAgentId}
+                        disabled={agentProfiles.length === 0}
+                      >
+                        <SelectTrigger className="h-8 w-[132px] text-xs sm:w-[180px]">
+                          <SelectValue placeholder="Choose agent" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {agentProfiles.map((profile) => (
+                            <SelectItem key={profile.id} value={profile.id}>
+                              {profile.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                     <Button variant="outline" size="icon" aria-label="New chat" onClick={() => void createConversation()}>
                       <Plus />
                     </Button>
@@ -1740,6 +2106,26 @@ function App() {
               </section>
             )}
 
+            {page === "agents" && (
+              <AgentsPage
+                profiles={agentProfiles}
+                tools={Object.entries(tools).map(([name, info]) => ({
+                  name,
+                  description: info.description || "",
+                  enabled: info.enabled !== false,
+                  status: info.status || "unknown",
+                }))}
+                onProfilesChange={(profiles) => {
+                  setAgentProfiles(profiles)
+                  setSelectedAgentId((current) =>
+                    profiles.some((profile) => profile.id === current)
+                      ? current
+                      : profiles[0]?.id ?? "",
+                  )
+                }}
+              />
+            )}
+
             {page === "mesh" && (
               <MeshPage
                 temperature={Number(temperature) || 0.2}
@@ -1748,143 +2134,198 @@ function App() {
             )}
 
             {page === "tools" && (
-              <section className="grid h-full min-h-0 gap-4 p-4 lg:grid-cols-[minmax(240px,300px)_minmax(0,1fr)] lg:p-6">
-                <Card className="flex min-h-0 flex-col overflow-hidden">
-                  <CardHeader className="gap-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <div>
-                        <CardTitle>Registered tools</CardTitle>
-                        <CardDescription>
-                          {Object.values(tools).filter((info) => info.enabled !== false).length} enabled · {Object.keys(tools).length} total
-                        </CardDescription>
+              <section className="flex h-full min-h-0 flex-col">
+                <div className="flex shrink-0 flex-wrap items-center gap-3 border-b p-4 sm:px-6">
+                  <div className="relative min-w-[180px] flex-1">
+                    <Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
+                    <Input className="pl-9" placeholder="Search tools" value={toolSearch} onChange={(event) => setToolSearch(event.target.value)} />
+                  </div>
+                  <Button onClick={() => setCreateToolOpen(true)}><Plus /> Add tool</Button>
+                  <div className="flex items-center rounded-lg border p-0.5" role="group" aria-label="Tools view mode">
+                    <Button
+                      variant={toolViewMode === "grid" ? "secondary" : "ghost"}
+                      size="icon-sm"
+                      aria-label="Grid view"
+                      aria-pressed={toolViewMode === "grid"}
+                      onClick={() => setToolViewMode("grid")}
+                    >
+                      <Grid2X2 />
+                    </Button>
+                    <Button
+                      variant={toolViewMode === "list" ? "secondary" : "ghost"}
+                      size="icon-sm"
+                      aria-label="List view"
+                      aria-pressed={toolViewMode === "list"}
+                      onClick={() => setToolViewMode("list")}
+                    >
+                      <List />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex shrink-0 flex-wrap items-center gap-2 border-b px-4 py-3 sm:px-6">
+                  {[
+                    { id: "all", label: "All", count: Object.keys(tools).length },
+                    { id: "enabled", label: "Enabled", count: Object.values(tools).filter((info) => info.enabled !== false).length },
+                    { id: "disabled", label: "Disabled", count: Object.values(tools).filter((info) => info.enabled === false).length },
+                    ...agentProfiles.map((profile) => ({
+                      id: profile.id,
+                      label: profile.name,
+                      count: Object.values(tools).filter((info) =>
+                        profile.tool_names.includes("*")
+                        || (info.assigned_agents || []).some((agent) => agent.id === profile.id),
+                      ).length,
+                    })),
+                  ].map((filter) => (
+                    <Button
+                      key={filter.id}
+                      variant={toolFilter === filter.id ? "secondary" : "outline"}
+                      size="sm"
+                      className="h-8 rounded-full px-3 text-xs"
+                      aria-pressed={toolFilter === filter.id}
+                      onClick={() => setToolFilter(filter.id)}
+                    >
+                      {filter.label}
+                      <span className="ml-1 border-l pl-2 tabular-nums text-muted-foreground">{filter.count}</span>
+                    </Button>
+                  ))}
+                </div>
+
+                {toolViewMode === "grid" ? (
+                  <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+                    {filteredTools.length ? (
+                      <div className="grid items-stretch gap-4 sm:grid-cols-2 2xl:grid-cols-3">
+                        {filteredTools.map(([name, info]) => {
+                          const assignedAgents = info.assigned_agents || []
+                          const isSelected = selectedTool === name
+                          return (
+                            <Card
+                              key={name}
+                              className={`flex h-full flex-col overflow-hidden transition-colors ${isSelected ? "border-primary/50" : ""} ${info.enabled === false ? "opacity-75" : ""}`}
+                            >
+                              <button
+                                type="button"
+                                className="flex flex-1 flex-col p-5 text-left"
+                                aria-pressed={isSelected}
+                                onClick={() => isSelected ? setSelectedTool("") : selectToolByName(name)}
+                              >
+                                <span className="mb-4 flex w-full items-center justify-between">
+                                  <span className="grid size-11 place-items-center rounded-xl border bg-muted text-muted-foreground">
+                                    <Wrench className="size-5" />
+                                  </span>
+                                  <ChevronDown className={`size-4 text-muted-foreground transition-transform ${isSelected ? "rotate-180" : ""}`} />
+                                </span>
+                                <span className="flex items-center gap-2 break-all text-sm font-semibold">
+                                  <span className={`size-2 shrink-0 rounded-full ${info.enabled === false ? "bg-muted-foreground/50" : "bg-emerald-500"}`} />
+                                  {name}
+                                </span>
+                                <span className="mt-2 line-clamp-2 min-h-10 text-xs leading-5 text-muted-foreground">
+                                  {info.description || "No description available."}
+                                </span>
+                                <span className="mt-4 flex w-full items-center justify-between gap-2 text-xs text-muted-foreground">
+                                  <span>{Object.keys(info.parameter || {}).length} arguments</span>
+                                  <Badge variant={info.status === "valid" ? "secondary" : "destructive"}>{info.status || "unknown"}</Badge>
+                                </span>
+                                <span className="mt-3 flex min-h-6 w-full flex-wrap gap-1.5">
+                                  {assignedAgents.length ? (
+                                    <>
+                                      {assignedAgents.slice(0, 2).map((agent) => (
+                                        <Badge key={agent.id} variant="outline" className="max-w-32 truncate text-[10px]">{agent.name}</Badge>
+                                      ))}
+                                      {assignedAgents.length > 2 && <Badge variant="outline" className="text-[10px]">+{assignedAgents.length - 2}</Badge>}
+                                    </>
+                                  ) : (
+                                    <span className="text-xs text-muted-foreground">No agents assigned</span>
+                                  )}
+                                </span>
+                              </button>
+                              <div className="px-4 pb-4">
+                                <Button
+                                  className="w-full rounded-full"
+                                  variant={info.enabled === false ? "default" : "outline"}
+                                  disabled={updatingTool === name}
+                                  role="switch"
+                                  aria-label={`${info.enabled === false ? "Enable" : "Disable"} ${name} for the LLM`}
+                                  aria-checked={info.enabled !== false}
+                                  onClick={() => void toggleToolEnabled(name)}
+                                >
+                                  {info.enabled === false ? "Enable tool" : "Disable tool"}
+                                </Button>
+                              </div>
+                            </Card>
+                          )
+                        })}
                       </div>
-                      <Button variant="outline" size="icon" aria-label="Create tool" onClick={() => setCreateToolOpen(true)}><Plus /></Button>
-                    </div>
-                    <div className="relative">
-                      <Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
-                      <Input className="pl-9" placeholder="Search tools" value={toolSearch} onChange={(event) => setToolSearch(event.target.value)} />
-                    </div>
-                  </CardHeader>
-                  <Separator />
-                  <ScrollArea className="min-h-0 flex-1">
-                    <div className="grid gap-1 p-2">
-                      {filteredTools.map(([name, info]) => (
-                        <div
-                          key={name}
-                          className={`flex items-center gap-2 rounded-lg p-2 transition-colors ${selectedTool === name ? "bg-muted" : "hover:bg-muted/70"} ${info.enabled === false ? "opacity-65" : ""}`}
-                        >
-                          <button
-                            type="button"
-                            className="min-w-0 flex-1 rounded-md p-1 text-left"
-                            onClick={() => selectToolByName(name)}
-                          >
-                            <span className="flex items-center justify-between gap-2">
-                              <span className="truncate text-sm font-medium">{name}</span>
-                              <Badge variant="secondary">{Object.keys(info.parameter || {}).length}</Badge>
-                            </span>
-                          </button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className={`h-6 w-11 shrink-0 rounded-full p-0 ${
-                              info.enabled === false ? "justify-start bg-muted" : "justify-end bg-primary"
-                            }`}
-                            role="switch"
-                            aria-label={`${info.enabled === false ? "Enable" : "Disable"} ${name} for the LLM`}
-                            title={`${info.enabled === false ? "Enable" : "Disable"} ${name} for the LLM`}
-                            aria-checked={info.enabled !== false}
-                            disabled={updatingTool === name}
-                            onClick={() => void toggleToolEnabled(name)}
-                          >
-                            <span className="mx-0.5 size-5 rounded-full bg-background shadow-sm" />
-                          </Button>
-                        </div>
-                      ))}
-                      {filteredTools.length === 0 && <p className="p-6 text-center text-sm text-muted-foreground">No tools found.</p>}
-                    </div>
-                  </ScrollArea>
-                </Card>
-
-                {selectedToolInfo ? (
-                  <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
-                    <Card>
-                      <CardHeader>
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="min-w-0 space-y-1">
-                            <CardTitle className="break-all">{selectedTool}</CardTitle>
-                            <CardDescription>{selectedToolInfo.description || "No description available."}</CardDescription>
-                          </div>
-                          <Badge variant={selectedToolInfo.status === "valid" ? "default" : "destructive"}>{selectedToolInfo.status || "unknown"}</Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="grid gap-5">
-                        <div className="flex items-center justify-between gap-3">
-                          <h3 className="text-sm font-medium">Arguments</h3>
-                          <Button variant="outline" size="sm" onClick={() => {
-                            if (!toolJsonMode) setToolJson(JSON.stringify(Object.fromEntries(Object.entries(toolArgs).map(([key, value]) => [key, value])), null, 2))
-                            else {
-                              try {
-                                const parsed = JSON.parse(toolJson) as Record<string, unknown>
-                                setToolArgs(Object.fromEntries(Object.entries(parsed).map(([key, value]) => [key, String(value)])))
-                              } catch (error) {
-                                toast.error(`Invalid JSON: ${messageOf(error)}`)
-                                return
-                              }
-                            }
-                            setToolJsonMode((value) => !value)
-                          }}>
-                            <Code2 /> {toolJsonMode ? "Form mode" : "JSON mode"}
-                          </Button>
-                        </div>
-                        {toolJsonMode ? (
-                          <Textarea className="min-h-40 font-mono text-xs" value={toolJson} onChange={(event) => setToolJson(event.target.value)} aria-label="Tool arguments JSON" />
-                        ) : Object.keys(selectedToolInfo.parameter || {}).length === 0 ? (
-                          <p className="text-sm text-muted-foreground">This tool does not require arguments.</p>
-                        ) : (
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            {Object.entries(selectedToolInfo.parameter || {}).map(([key, info]) => (
-                              <Field key={key} label={`${key}${info.required === false ? " (optional)" : ""}`} htmlFor={`tool-arg-${key}`}>
-                                <Input
-                                  id={`tool-arg-${key}`}
-                                  type={["int", "integer", "float", "number"].includes((info.type || "").toLowerCase()) ? "number" : "text"}
-                                  value={toolArgs[key] || ""}
-                                  placeholder={info.type || "Enter a value"}
-                                  onChange={(event) => setToolArgs((current) => ({ ...current, [key]: event.target.value }))}
-                                />
-                              </Field>
-                            ))}
-                          </div>
-                        )}
-                        <div className="flex justify-end">
-                          <Button onClick={() => void executeTool()} disabled={runningTool || selectedToolInfo.status !== "valid"}>
-                            {runningTool ? <LoaderCircle className="animate-spin" /> : <Play />}
-                            {runningTool ? "Running…" : "Run tool"}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader className="flex-row items-center justify-between">
-                        <div>
-                          <CardTitle>Execution output</CardTitle>
-                          <CardDescription>Tool results appear here.</CardDescription>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {toolRunStatus && <StatusBadge status={toolRunStatus} />}
-                          {toolDuration !== null && <span className="text-xs text-muted-foreground">{toolDuration} ms</span>}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <pre className="max-h-80 min-h-20 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-muted p-4 font-mono text-xs leading-5">{toolOutput || "Ready to execute."}</pre>
-                      </CardContent>
-                    </Card>
+                    ) : (
+                      <Card className="flex min-h-56 items-center justify-center">
+                        <EmptyState icon={Wrench} title="No tools found" description="Try another search or filter." />
+                      </Card>
+                    )}
+                    {selectedToolVisible && <div className="mt-4">{selectedToolDetails}</div>}
                   </div>
                 ) : (
-                  <Card className="flex items-center justify-center">
-                    <EmptyState icon={Wrench} title="Select a tool" description="Choose a registered tool to inspect its arguments and run it." />
-                  </Card>
+                  <div className="grid min-h-0 flex-1 grid-rows-[minmax(12rem,0.35fr)_minmax(0,1fr)] gap-4 p-4 lg:grid-cols-[minmax(250px,304px)_minmax(0,1fr)] lg:grid-rows-1 lg:p-6">
+                    <Card className="flex min-h-0 flex-col overflow-hidden">
+                      <CardHeader className="p-4">
+                        <div>
+                          <CardTitle className="text-base">Registered tools</CardTitle>
+                          <CardDescription>
+                            {Object.values(tools).filter((info) => info.enabled !== false).length} enabled · {Object.keys(tools).length} total
+                          </CardDescription>
+                        </div>
+                      </CardHeader>
+                      <Separator />
+                      <ScrollArea className="min-h-0 flex-1">
+                        <div className="grid gap-1 p-2">
+                          {filteredTools.map(([name, info]) => {
+                            const assignedAgents = info.assigned_agents || []
+                            return (
+                              <div
+                                key={name}
+                                className={`flex items-center gap-2 rounded-lg p-2 transition-colors ${selectedTool === name ? "bg-muted" : "hover:bg-muted/70"} ${info.enabled === false ? "opacity-65" : ""}`}
+                              >
+                                <button
+                                  type="button"
+                                  className="min-w-0 flex-1 rounded-md p-1 text-left"
+                                  aria-pressed={selectedTool === name}
+                                  onClick={() => selectToolByName(name)}
+                                >
+                                  <span className="flex items-center gap-2">
+                                    <span className={`size-2 shrink-0 rounded-full ${info.enabled === false ? "bg-muted-foreground/50" : "bg-emerald-500"}`} />
+                                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{name}</span>
+                                  </span>
+                                  <span className="mt-1 flex flex-wrap items-center gap-1 pl-4">
+                                    {assignedAgents.slice(0, 2).map((agent) => (
+                                      <Badge key={agent.id} variant="outline" className="max-w-24 truncate text-[10px]">{agent.name}</Badge>
+                                    ))}
+                                    {assignedAgents.length > 2 && <Badge variant="outline" className="text-[10px]">+{assignedAgents.length - 2}</Badge>}
+                                    <Badge variant="secondary" className="text-[10px]">{Object.keys(info.parameter || {}).length} args</Badge>
+                                  </span>
+                                </button>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className={`h-6 w-11 shrink-0 rounded-full p-0 ${info.enabled === false ? "justify-start bg-muted" : "justify-end bg-primary"}`}
+                                  role="switch"
+                                  aria-label={`${info.enabled === false ? "Enable" : "Disable"} ${name} for the LLM`}
+                                  aria-checked={info.enabled !== false}
+                                  disabled={updatingTool === name}
+                                  onClick={() => void toggleToolEnabled(name)}
+                                >
+                                  <span className="mx-0.5 size-5 rounded-full bg-background shadow-sm" />
+                                </Button>
+                              </div>
+                            )
+                          })}
+                          {filteredTools.length === 0 && <p className="p-6 text-center text-sm text-muted-foreground">No tools found.</p>}
+                        </div>
+                      </ScrollArea>
+                    </Card>
+                    <div className="min-h-0 overflow-y-auto">
+                      {selectedToolDetails}
+                    </div>
+                  </div>
                 )}
               </section>
             )}

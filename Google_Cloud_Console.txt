@@ -1,0 +1,1919 @@
+The Google Drive API allows clients to access resources from Google Drive.
+
+- [REST Resource: v3.about](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.about)
+- [REST Resource: v3.accessproposals](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.accessproposals)
+- [REST Resource: v3.approvals](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.approvals)
+- [REST Resource: v3.apps](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.apps)
+- [REST Resource: v3.changes](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.changes)
+- [REST Resource: v3.channels](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.channels)
+- [REST Resource: v3.comments](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.comments)
+- [REST Resource: v3.drives](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.drives)
+- [REST Resource: v3.files](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.files)
+- [REST Resource: v3.operations](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.operations)
+- [REST Resource: v3.permissions](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.permissions)
+- [REST Resource: v3.replies](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.replies)
+- [REST Resource: v3.revisions](https://developers.google.com/workspace/drive/api/reference/rest/v3#v3.revisions)
+
+## Service: googleapis.com/drive/v3
+
+To call this service, we recommend that you use the Google-provided [client libraries](https://cloud.google.com/apis/docs/client-libraries-explained). If your application needs to use your own libraries to call this service, use the following information when you make the API requests.
+
+### Discovery document
+
+A [Discovery Document](https://developers.google.com/discovery/v1/reference/apis) is a machine-readable specification for describing and consuming REST APIs. It is used to build client libraries, IDE plugins, and other tools that interact with Google APIs. One service may provide multiple discovery documents. This service provides the following discovery document:
+
+- <https://www.googleapis.com/discovery/v1/apis/drive/v3/rest>
+
+### Service endpoint
+
+A [service endpoint](https://cloud.google.com/apis/design/glossary#api_service_endpoint) is a base URL that specifies the network address of an API service. One service might have multiple service endpoints. This service has the following service endpoint and all URIs below are relative to this service endpoint:
+
+- `https://www.googleapis.com`
+
+## REST Resource: [v3.about](https://developers.google.com/workspace/drive/api/reference/rest/v3/about)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/about/get` | `GET /drive/v3/about` Gets information about the user, the user's Drive, and system capabilities. |
+
+## REST Resource: [v3.accessproposals](https://developers.google.com/workspace/drive/api/reference/rest/v3/accessproposals)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/accessproposals/get` | `GET /drive/v3/files/{fileId}/accessproposals/{proposalId}` Retrieves an access proposal by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/accessproposals/list` | `GET /drive/v3/files/{fileId}/accessproposals` List the access proposals on a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/accessproposals/resolve` | `POST /drive/v3/files/{fileId}/accessproposals/{proposalId}:resolve` Approves or denies an access proposal. |
+
+## REST Resource: [v3.approvals](https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/approve` | `POST /drive/v3/files/{fileId}/approvals/{approvalId}:approve` Approves an approval. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/cancel` | `POST /drive/v3/files/{fileId}/approvals/{approvalId}:cancel` Cancels an approval. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/comment` | `POST /drive/v3/files/{fileId}/approvals/{approvalId}:comment` Comments on an approval. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/decline` | `POST /drive/v3/files/{fileId}/approvals/{approvalId}:decline` Declines an approval. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/get` | `GET /drive/v3/files/{fileId}/approvals/{approvalId}` Gets an approval by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/list` | `GET /drive/v3/files/{fileId}/approvals` Lists the approvals on a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/reassign` | `POST /drive/v3/files/{fileId}/approvals/{approvalId}:reassign` Reassigns the reviewers on an approval. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/approvals/start` | `POST /drive/v3/files/{fileId}/approvals:start` Starts an approval on a file. |
+
+## REST Resource: [v3.apps](https://developers.google.com/workspace/drive/api/reference/rest/v3/apps)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/apps/get` | `GET /drive/v3/apps/{appId}` Gets a specific app. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/apps/list` | `GET /drive/v3/apps` Lists a user's installed apps. |
+
+## REST Resource: [v3.changes](https://developers.google.com/workspace/drive/api/reference/rest/v3/changes)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/changes/getStartPageToken` | `GET /drive/v3/changes/startPageToken` Gets the starting pageToken for listing future changes. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/changes/list` | `GET /drive/v3/changes` Lists the changes for a user or shared drive. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/changes/watch` | `POST /drive/v3/changes/watch` Subscribes to changes for a user. |
+
+## REST Resource: [v3.channels](https://developers.google.com/workspace/drive/api/reference/rest/v3/channels)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/channels/stop` | `POST /drive/v3/channels/stop` Stops watching resources through this channel. |
+
+## REST Resource: [v3.comments](https://developers.google.com/workspace/drive/api/reference/rest/v3/comments)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/create` | `POST /drive/v3/files/{fileId}/comments` Creates a comment on a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/delete` | `DELETE /drive/v3/files/{fileId}/comments/{commentId}` Deletes a comment. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/get` | `GET /drive/v3/files/{fileId}/comments/{commentId}` Gets a comment by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/list` | `GET /drive/v3/files/{fileId}/comments` Lists a file's comments. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/comments/update` | `PATCH /drive/v3/files/{fileId}/comments/{commentId}` Updates a comment with patch semantics. |
+
+## REST Resource: [v3.drives](https://developers.google.com/workspace/drive/api/reference/rest/v3/drives)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/create` | `POST /drive/v3/drives` Creates a shared drive. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/delete` | `DELETE /drive/v3/drives/{driveId}` Permanently deletes a shared drive for which the user is an `organizer`. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/get` | `GET /drive/v3/drives/{driveId}` Gets a shared drive's metadata by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/hide` | `POST /drive/v3/drives/{driveId}/hide` Hides a shared drive from the default view. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/list` | `GET /drive/v3/drives` <br /> Lists the user's shared drives. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/unhide` | `POST /drive/v3/drives/{driveId}/unhide` Restores a shared drive to the default view. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/drives/update` | `PATCH /drive/v3/drives/{driveId}` Updates the metadata for a shared drive. |
+
+## REST Resource: [v3.files](https://developers.google.com/workspace/drive/api/reference/rest/v3/files)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/copy` | `POST /drive/v3/files/{fileId}/copy` Creates a copy of a file and applies any requested updates with patch semantics. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/create` | `POST /drive/v3/files` `POST /upload/drive/v3/files` <br /> Creates a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/delete` | `DELETE /drive/v3/files/{fileId}` Permanently deletes a file owned by the user without moving it to the trash. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/download` | `POST /drive/v3/files/{fileId}/download` Downloads the content of a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/emptyTrash` | `DELETE /drive/v3/files/trash` Permanently deletes all of the user's trashed files. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/export` | `GET /drive/v3/files/{fileId}/export` Exports a Google Workspace document to the requested MIME type and returns exported byte content. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/generateCseToken` | `GET /drive/v3/files/generateCseToken` Generates a CSE token which can be used to create or update CSE files. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/generateIds` | `GET /drive/v3/files/generateIds` Generates a set of file IDs which can be provided in create or copy requests. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/get` | `GET /drive/v3/files/{fileId}` <br /> Gets a file's metadata or content by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/list` | `GET /drive/v3/files` <br /> Lists the user's files. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/listLabels` | `GET /drive/v3/files/{fileId}/listLabels` Lists the labels on a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/modifyLabels` | `POST /drive/v3/files/{fileId}/modifyLabels` Modifies the set of labels applied to a file. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/update` | `PATCH /drive/v3/files/{fileId}` `PATCH /upload/drive/v3/files/{fileId}` <br /> Updates a file's metadata, content, or both. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/files/watch` | `POST /drive/v3/files/{fileId}/watch` Subscribes to changes to a file. |
+
+## REST Resource: [v3.operations](https://developers.google.com/workspace/drive/api/reference/rest/v3/operations)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/operations/get` | `GET /drive/v3/operations/{name}` Gets the latest state of a long-running operation. |
+
+## REST Resource: [v3.permissions](https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/create` | `POST /drive/v3/files/{fileId}/permissions` Creates a permission for a file or shared drive. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/delete` | `DELETE /drive/v3/files/{fileId}/permissions/{permissionId}` Deletes a permission. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/get` | `GET /drive/v3/files/{fileId}/permissions/{permissionId}` Gets a permission by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/list` | `GET /drive/v3/files/{fileId}/permissions` Lists a file's or shared drive's permissions. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/permissions/update` | `PATCH /drive/v3/files/{fileId}/permissions/{permissionId}` Updates a permission with patch semantics. |
+
+## REST Resource: [v3.replies](https://developers.google.com/workspace/drive/api/reference/rest/v3/replies)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/create` | `POST /drive/v3/files/{fileId}/comments/{commentId}/replies` Creates a reply to a comment. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/delete` | `DELETE /drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}` Deletes a reply. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/get` | `GET /drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}` Gets a reply by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/list` | `GET /drive/v3/files/{fileId}/comments/{commentId}/replies` Lists a comment's replies. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/replies/update` | `PATCH /drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}` Updates a reply with patch semantics. |
+
+## REST Resource: [v3.revisions](https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions/delete` | `DELETE /drive/v3/files/{fileId}/revisions/{revisionId}` Permanently deletes a file version. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions/get` | `GET /drive/v3/files/{fileId}/revisions/{revisionId}` Gets a revision's metadata or content by ID. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions/list` | `GET /drive/v3/files/{fileId}/revisions` Lists a file's revisions. |
+| `https://developers.google.com/workspace/drive/api/reference/rest/v3/revisions/update` | `PATCH /drive/v3/files/{fileId}/revisions/{revisionId}` Updates a revision with patch semantics. |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html 
+      lang="en"
+      dir="ltr">
+  <head>
+    <meta name="google-signin-client-id" content="721724668570-nbkv1cfusk7kk4eni4pjvepaus73b13t.apps.googleusercontent.com"><meta name="google-signin-scope"
+          content="profile email https://www.googleapis.com/auth/developerprofiles https://www.googleapis.com/auth/developerprofiles.award https://www.googleapis.com/auth/devprofiles.full_control.firstparty"><meta property="og:site_name" content="Google for Developers">
+    <meta property="og:type" content="website"><meta name="robots" content="noindex"><meta name="theme-color" content="#fff"><meta charset="utf-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+    <link rel="manifest" href="/_pwa/developers/manifest.json"
+          crossorigin="use-credentials">
+    <link rel="preconnect" href="//www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="//fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="//www.google-analytics.com" crossorigin><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Google+Sans:400,500|Roboto:400,400italic,500,500italic,700,700italic|Roboto+Mono:400,500,700&display=swap">
+      <link rel="stylesheet"
+            href="//fonts.googleapis.com/css2?family=Material+Icons&family=Material+Symbols+Outlined&display=block"><link rel="stylesheet" href="https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/css/app.css">
+      <link rel="shortcut icon" href="https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/favicon-new.png">
+    <link rel="apple-touch-icon" href="https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/touchicon-180-new.png"><link rel="canonical" href="https://developers.google.com/workspace/tasks/reference/rest/.md.txt"><link rel="search" type="application/opensearchdescription+xml"
+            title="Google for Developers" href="https://developers.google.com/s/opensearch.xml">
+      <title>404 &nbsp;|&nbsp; Page Not Found &nbsp;|&nbsp; Google for Developers</title>
+
+<meta property="og:title" content="404 &nbsp;|&nbsp; Page Not Found &nbsp;|&nbsp; Google for Developers"><meta property="og:image" content="https://developers.google.com/static/site-assets/images/home/developers-landing-social-media.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://developers.google.com/static/site-assets/images/home/developers-landing-social-media.png">
+  <meta name="xsrf_token" content="fQdUhc2ETyMkEadav7NPsAzMJDI492r8xpNvcxGRuHU6MTc5Mzk1NjAwMDIyMTY1NQ">
+  
+
+  <meta name="session_expiry" content="0">
+  <meta name="uid" content="103625563707930065920">
+    </head>
+  <body class="color-scheme--light"
+        template="404"
+        theme="white"
+        type="error"
+        
+        
+        
+        layout="full"
+        
+        
+        
+        
+        
+          
+            concierge='hide'
+          
+        
+        
+        pending>
+  
+    <devsite-progress type="indeterminate" id="app-progress"></devsite-progress>
+  
+  
+    <a href="#main-content" class="skip-link button">
+      
+      Skip to main content
+    </a>
+    <section class="devsite-wrapper">
+      <devsite-cookie-notification-bar></devsite-cookie-notification-bar>
+        <devsite-header role="banner">
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="devsite-header--inner" data-nosnippet>
+  <div class="devsite-top-logo-row-wrapper-wrapper">
+    <div class="devsite-top-logo-row-wrapper">
+      <div class="devsite-top-logo-row">
+        <button type="button" id="devsite-hamburger-menu"
+          class="devsite-header-icon-button button-flat material-icons gc-analytics-event"
+          data-category="Site-Wide Custom Events"
+          data-label="Navigation menu button"
+          visually-hidden
+          aria-label="Open menu">
+        </button>
+        
+<div class="devsite-product-name-wrapper">
+
+  <a href="/" class="devsite-site-logo-link gc-analytics-event"
+   data-category="Site-Wide Custom Events" data-label="Site logo" track-type="globalNav"
+   track-name="googleForDevelopers" track-metadata-position="nav"
+   track-metadata-eventDetail="nav">
+  
+  <picture>
+    
+    <img src="https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/lockup-new.svg" class="devsite-site-logo" alt="Google for Developers">
+  </picture>
+  
+</a>
+
+
+
+</div>
+        <div class="devsite-top-logo-row-middle">
+          <div class="devsite-header-upper-tabs">
+            
+              
+              
+  <devsite-tabs class="upper-tabs">
+
+    <nav class="devsite-tabs-wrapper" aria-label="Upper tabs">
+      
+        
+          <tab  >
+            
+    <a href="https://developers.google.com/community"
+    class="devsite-tabs-content gc-analytics-event "
+      track-metadata-eventdetail="https://developers.google.com/community"
+    
+       track-type="nav"
+       track-metadata-position="nav - community"
+       track-metadata-module="primary nav"
+       
+       
+         
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Tab: Community"
+         
+           track-name="community"
+         
+       >
+    Community
+  
+    </a>
+    
+  
+          </tab>
+        
+      
+        
+          <tab  >
+            
+    <a href="https://developers.google.com/events"
+    class="devsite-tabs-content gc-analytics-event "
+      track-metadata-eventdetail="https://developers.google.com/events"
+    
+       track-type="nav"
+       track-metadata-position="nav - events"
+       track-metadata-module="primary nav"
+       
+       
+         
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Tab: Events"
+         
+           track-name="events"
+         
+       >
+    Events
+  
+    </a>
+    
+  
+          </tab>
+        
+      
+        
+          <tab  >
+            
+    <a href="https://developers.google.com/solutions/catalog"
+    class="devsite-tabs-content gc-analytics-event "
+      track-metadata-eventdetail="https://developers.google.com/solutions/catalog"
+    
+       track-type="nav"
+       track-metadata-position="nav - learn"
+       track-metadata-module="primary nav"
+       
+       
+         
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Tab: Learn"
+         
+           track-name="learn"
+         
+       >
+    Learn
+  
+    </a>
+    
+  
+          </tab>
+        
+      
+        
+          <tab  >
+            
+    <a href="https://developers.googleblog.com/"
+    class="devsite-tabs-content gc-analytics-event "
+      track-metadata-eventdetail="https://developers.googleblog.com/"
+    
+       track-type="nav"
+       track-metadata-position="nav - blog"
+       track-metadata-module="primary nav"
+       
+       
+         
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Tab: Blog"
+         
+           track-name="blog"
+         
+       >
+    Blog
+  
+    </a>
+    
+  
+          </tab>
+        
+      
+        
+          <tab  >
+            
+    <a href="https://www.youtube.com/user/GoogleDevelopers"
+    class="devsite-tabs-content gc-analytics-event "
+      track-metadata-eventdetail="https://www.youtube.com/user/GoogleDevelopers"
+    
+       track-type="nav"
+       track-metadata-position="nav - youtube"
+       track-metadata-module="primary nav"
+       
+       
+         
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Tab: YouTube"
+         
+           track-name="youtube"
+         
+       >
+    YouTube
+  
+    </a>
+    
+  
+          </tab>
+        
+      
+    </nav>
+
+  </devsite-tabs>
+
+            
+           </div>
+          
+<devsite-search
+    enable-signin
+    enable-search
+    enable-suggestions
+      enable-query-completion
+    
+    enable-search-summaries
+    project-name="Google for Developers"
+    tenant-name="Google for Developers"
+    
+    
+    
+    
+    
+    >
+  <form class="devsite-search-form" action="https://developers.google.com/s/results" method="GET">
+    <div class="devsite-search-container">
+      <button type="button"
+              search-open
+              class="devsite-search-button devsite-header-icon-button button-flat material-icons"
+              
+              aria-label="Open search"></button>
+      <div class="devsite-searchbox">
+        <input
+          aria-activedescendant=""
+          aria-autocomplete="list"
+          
+          aria-label="Search"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          autocomplete="off"
+          class="devsite-search-field devsite-search-query"
+          name="q"
+          
+          placeholder="Search"
+          role="combobox"
+          type="text"
+          value=""
+          >
+          <div class="devsite-search-image material-icons" aria-hidden="true">
+            
+              <svg class="devsite-search-ai-image" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_6641_386)">
+                    <path d="M19.6 21L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16C7.68333 16 6.14167 15.375 4.875 14.125C3.625 12.8583 3 11.3167 3 9.5C3 7.68333 3.625 6.15 4.875 4.9C6.14167 3.63333 7.68333 3 9.5 3C10.0167 3 10.5167 3.05833 11 3.175C11.4833 3.275 11.9417 3.43333 12.375 3.65L10.825 5.2C10.6083 5.13333 10.3917 5.08333 10.175 5.05C9.95833 5.01667 9.73333 5 9.5 5C8.25 5 7.18333 5.44167 6.3 6.325C5.43333 7.19167 5 8.25 5 9.5C5 10.75 5.43333 11.8167 6.3 12.7C7.18333 13.5667 8.25 14 9.5 14C10.6667 14 11.6667 13.625 12.5 12.875C13.35 12.1083 13.8417 11.15 13.975 10H15.975C15.925 10.6333 15.7833 11.2333 15.55 11.8C15.3333 12.3667 15.05 12.8667 14.7 13.3L21 19.6L19.6 21ZM17.5 12C17.5 10.4667 16.9667 9.16667 15.9 8.1C14.8333 7.03333 13.5333 6.5 12 6.5C13.5333 6.5 14.8333 5.96667 15.9 4.9C16.9667 3.83333 17.5 2.53333 17.5 0.999999C17.5 2.53333 18.0333 3.83333 19.1 4.9C20.1667 5.96667 21.4667 6.5 23 6.5C21.4667 6.5 20.1667 7.03333 19.1 8.1C18.0333 9.16667 17.5 10.4667 17.5 12Z" fill="#5F6368"/>
+                  </g>
+                <defs>
+                <clipPath id="clip0_6641_386">
+                <rect width="24" height="24" fill="white"/>
+                </clipPath>
+                </defs>
+              </svg>
+            
+          </div>
+          <div class="devsite-search-shortcut-icon-container" aria-hidden="true">
+            <kbd class="devsite-search-shortcut-icon">/</kbd>
+          </div>
+      </div>
+    </div>
+  </form>
+  <button type="button"
+          search-close
+          class="devsite-search-button devsite-header-icon-button button-flat material-icons"
+          
+          aria-label="Close search"></button>
+</devsite-search>
+
+        </div>
+
+        
+
+          
+
+          
+
+          
+
+          
+
+          
+<devsite-language-selector>
+  <ul role="presentation">
+    
+    
+    <li role="presentation">
+      <a role="menuitem" lang="en"
+        
+          aria-current="true">English</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="de"
+        >Deutsch</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="es"
+        >Español</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="fr"
+        >Français</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="id"
+        >Indonesia</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="pt_br"
+        >Português – Brasil</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="ru"
+        >Русский</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="zh_cn"
+        >中文 – 简体</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="ja"
+        >日本語</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="ko"
+        >한국어</a>
+    </li>
+    
+  </ul>
+</devsite-language-selector>
+
+
+          
+
+        
+
+        
+          <devsite-user signed-in
+                        
+                        
+                          enable-profiles
+                        
+                        
+                          fp-auth
+                        
+                        id="devsite-user">
+            
+          </devsite-user>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="devsite-collapsible-section
+    
+      devsite-header-no-lower-tabs
+    ">
+    <div class="devsite-header-background">
+      
+        
+      
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+  
+</devsite-header>
+        <devsite-book-nav scrollbars hidden>
+          
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="devsite-book-nav-filter"
+     hidden>
+  <span class="filter-list-icon material-icons" aria-hidden="true"></span>
+  <input type="text"
+         placeholder="Filter"
+         
+         aria-label="Type to filter"
+         role="searchbox">
+  
+  <span class="filter-clear-button hidden"
+        data-title="Clear filter"
+        aria-label="Clear filter"
+        role="button"
+        tabindex="0"></span>
+</div>
+
+<nav class="devsite-book-nav devsite-nav nocontent" data-nosnippet
+     aria-label="Side menu">
+  <div class="devsite-mobile-header">
+    <button type="button"
+            id="devsite-close-nav"
+            class="devsite-header-icon-button button-flat material-icons gc-analytics-event"
+            data-category="Site-Wide Custom Events"
+            data-label="Close navigation"
+            aria-label="Close navigation">
+    </button>
+    <div class="devsite-product-name-wrapper">
+
+  <a href="/" class="devsite-site-logo-link gc-analytics-event"
+   data-category="Site-Wide Custom Events" data-label="Site logo" track-type="globalNav"
+   track-name="googleForDevelopers" track-metadata-position="nav"
+   track-metadata-eventDetail="nav">
+  
+  <picture>
+    
+    <img src="https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/lockup-new.svg" class="devsite-site-logo" alt="Google for Developers">
+  </picture>
+  
+</a>
+
+
+</div>
+  </div>
+
+  <div class="devsite-book-nav-wrapper">
+    <div class="devsite-mobile-nav-top">
+      
+        <ul class="devsite-nav-list">
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="/community"
+    
+       class="devsite-nav-title gc-analytics-event
+              
+              "
+    
+
+    
+      
+        data-category="Site-Wide Custom Events"
+      
+        data-label="Tab: Community"
+      
+        track-name="community"
+      
+    
+     data-category="Site-Wide Custom Events"
+     data-label="Responsive Tab: Community"
+     track-type="globalNav"
+     track-metadata-eventDetail="globalMenu"
+     track-metadata-position="nav">
+  
+    <span class="devsite-nav-text" tooltip >
+      Community
+   </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="/events"
+    
+       class="devsite-nav-title gc-analytics-event
+              
+              "
+    
+
+    
+      
+        data-category="Site-Wide Custom Events"
+      
+        data-label="Tab: Events"
+      
+        track-name="events"
+      
+    
+     data-category="Site-Wide Custom Events"
+     data-label="Responsive Tab: Events"
+     track-type="globalNav"
+     track-metadata-eventDetail="globalMenu"
+     track-metadata-position="nav">
+  
+    <span class="devsite-nav-text" tooltip >
+      Events
+   </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="/solutions/catalog"
+    
+       class="devsite-nav-title gc-analytics-event
+              
+              "
+    
+
+    
+      
+        data-category="Site-Wide Custom Events"
+      
+        data-label="Tab: Learn"
+      
+        track-name="learn"
+      
+    
+     data-category="Site-Wide Custom Events"
+     data-label="Responsive Tab: Learn"
+     track-type="globalNav"
+     track-metadata-eventDetail="globalMenu"
+     track-metadata-position="nav">
+  
+    <span class="devsite-nav-text" tooltip >
+      Learn
+   </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://developers.googleblog.com/"
+    
+       class="devsite-nav-title gc-analytics-event
+              
+              "
+    
+
+    
+      
+        data-category="Site-Wide Custom Events"
+      
+        data-label="Tab: Blog"
+      
+        track-name="blog"
+      
+    
+     data-category="Site-Wide Custom Events"
+     data-label="Responsive Tab: Blog"
+     track-type="globalNav"
+     track-metadata-eventDetail="globalMenu"
+     track-metadata-position="nav">
+  
+    <span class="devsite-nav-text" tooltip >
+      Blog
+   </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.youtube.com/user/GoogleDevelopers"
+    
+       class="devsite-nav-title gc-analytics-event
+              
+              "
+    
+
+    
+      
+        data-category="Site-Wide Custom Events"
+      
+        data-label="Tab: YouTube"
+      
+        track-name="youtube"
+      
+    
+     data-category="Site-Wide Custom Events"
+     data-label="Responsive Tab: YouTube"
+     track-type="globalNav"
+     track-metadata-eventDetail="globalMenu"
+     track-metadata-position="nav">
+  
+    <span class="devsite-nav-text" tooltip >
+      YouTube
+   </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+          
+          
+        </ul>
+      
+    </div>
+    
+  </div>
+</nav>
+          
+        </devsite-book-nav>
+      
+      <section id="gc-wrapper">
+        <main role="main" id="main-content" class="devsite-main-content"
+            
+              
+              
+            >
+          <div class="devsite-sidebar">
+            <div class="devsite-sidebar-content">
+                
+                <devsite-toc class="devsite-nav"
+                            role="navigation"
+                            aria-label="On this page"
+                            depth="2"
+                            scrollbars
+                            data-nosnippet
+                  disabled></devsite-toc>
+                <devsite-recommendations-sidebar class="nocontent devsite-nav" data-nosnippet>
+                </devsite-recommendations-sidebar>
+            </div>
+          </div>
+          <devsite-content>
+            
+              
+
+
+
+<article class="devsite-article">
+  <article class="devsite-article-inner">
+    <div class="devsite-404">
+    
+    
+      <div class="devsite-404-error">
+        <h3 class="no-link">404</h3>
+        
+        <div class="devsite-404-error-message">
+          Sorry, we couldn't find that page.
+          
+        </div>
+        
+<devsite-search
+    enable-signin
+    enable-search
+    enable-suggestions
+      enable-query-completion
+    
+    
+    project-name="Google for Developers"
+    tenant-name="Google for Developers"
+    
+    
+    
+    
+    
+    >
+  <form class="devsite-search-form" action="https://developers.google.com/s/results" method="GET">
+    <div class="devsite-search-container">
+      <button type="button"
+              search-open
+              class="devsite-search-button devsite-header-icon-button button-flat material-icons"
+              
+              aria-label="Open search"></button>
+      <div class="devsite-searchbox">
+        <input
+          aria-activedescendant=""
+          aria-autocomplete="list"
+          
+          aria-label="Search"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          autocomplete="off"
+          class="devsite-search-field devsite-search-query"
+          name="q"
+          
+          placeholder="Search"
+          role="combobox"
+          type="text"
+          value=""
+          >
+          <div class="devsite-search-image material-icons" aria-hidden="true">
+            
+          </div>
+          <div class="devsite-search-shortcut-icon-container" aria-hidden="true">
+            <kbd class="devsite-search-shortcut-icon">/</kbd>
+          </div>
+      </div>
+    </div>
+  </form>
+  <button type="button"
+          search-close
+          class="devsite-search-button devsite-header-icon-button button-flat material-icons"
+          
+          aria-label="Close search"></button>
+</devsite-search>
+
+        
+      </div>
+    
+    </div><div class="devsite-floating-action-buttons"></div></article>
+</article>
+            
+          </devsite-content>
+        </main>
+        <devsite-footer-promos class="devsite-footer">
+          
+            
+          
+        </devsite-footer-promos>
+        <devsite-footer-linkboxes class="devsite-footer">
+          
+            
+<nav class="devsite-footer-linkboxes nocontent"
+     aria-label="Footer links"
+     data-nosnippet>
+  
+  <ul class="devsite-footer-linkboxes-list">
+    
+    <li class="devsite-footer-linkbox ">
+    <h3 class="devsite-footer-linkbox-heading no-link">Engage</h3>
+      <ul class="devsite-footer-linkbox-list">
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://discuss.ai.google.dev/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 1)"
+            >
+            
+          
+            Google AI Forum
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="/program"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 2)"
+            >
+            
+          
+            Google Developer Program
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="/community"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 3)"
+            >
+            
+          
+            Google Developer Groups
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="/community/experts"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 4)"
+            >
+            
+          
+            Google Developer Experts
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="/community/accelerators"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 5)"
+            >
+            
+          
+            Accelerators
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="/community/nvidia"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 6)"
+            >
+            
+              
+              
+            
+          
+            Google Cloud & NVIDIA
+          
+          </a>
+          
+          
+        </li>
+        
+      </ul>
+    </li>
+    
+    <li class="devsite-footer-linkbox ">
+    <h3 class="devsite-footer-linkbox-heading no-link">Connect</h3>
+      <ul class="devsite-footer-linkbox-list">
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="//googledevelopers.blogspot.com"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 1)"
+            >
+            
+          
+            Blog
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://bsky.app/profile/developers.google.com"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 2)"
+            >
+            
+          
+            Bluesky
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://www.instagram.com/googlefordevs/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 3)"
+            >
+            
+          
+            Instagram
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://www.linkedin.com/showcase/googledevelopers/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 4)"
+            >
+            
+          
+            LinkedIn
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="//twitter.com/googledevs"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 5)"
+            >
+            
+          
+            X (Twitter)
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="//www.youtube.com/user/GoogleDevelopers"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 6)"
+            >
+            
+              
+              
+            
+          
+            YouTube
+          
+          </a>
+          
+          
+        </li>
+        
+      </ul>
+    </li>
+    
+    <li class="devsite-footer-linkbox ">
+    <h3 class="devsite-footer-linkbox-heading no-link">Build</h3>
+      <ul class="devsite-footer-linkbox-list">
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://developer.android.com/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 1)"
+            >
+            
+          
+            Android
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://developer.chrome.com/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 2)"
+            >
+            
+          
+            Chrome
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://firebase.google.com/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 3)"
+            >
+            
+          
+            Firebase
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://aistudio.google.com/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 4)"
+            >
+            
+          
+            Google AI Studio
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://antigravity.google/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 5)"
+            >
+            
+          
+            Google Antigravity
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://cloud.google.com/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 6)"
+            >
+            
+          
+            Google Cloud
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://play.google.com/console/about/"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 7)"
+            >
+            
+          
+            Google Play
+          
+          </a>
+          
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="/products"
+             class="devsite-footer-linkbox-link gc-analytics-event"
+             data-category="Site-Wide Custom Events"
+            
+             data-label="Footer Link (index 8)"
+            >
+            
+              
+              
+            
+          
+            View all
+          
+          </a>
+          
+          
+        </li>
+        
+      </ul>
+    </li>
+    
+  </ul>
+  
+</nav>
+          
+        </devsite-footer-linkboxes>
+        <devsite-footer-utility class="devsite-footer">
+          
+            
+
+<div class="devsite-footer-utility nocontent" data-nosnippet>
+  
+  
+  <nav class="devsite-footer-sites" aria-label="Other Google Developers websites">
+    <a href="https://developers.google.com/"
+       class="devsite-footer-sites-logo-link gc-analytics-event"
+       data-category="Site-Wide Custom Events"
+       data-label="Footer Google Developers Link">
+      <picture>
+        
+        <img class="devsite-footer-sites-logo"
+             src="https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/lockup-google-for-developers.svg"
+             loading="lazy"
+             alt="Google Developers">
+      </picture>
+    </a>
+    <ul class="devsite-footer-sites-list">
+      
+      <li class="devsite-footer-sites-item">
+        <a href="//developer.android.com"
+           class="devsite-footer-sites-link
+                  gc-analytics-event"
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Footer Android Link"
+         
+         >
+          Android
+        </a>
+      </li>
+      
+      <li class="devsite-footer-sites-item">
+        <a href="//developer.chrome.com/home"
+           class="devsite-footer-sites-link
+                  gc-analytics-event"
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Footer Chrome Link"
+         
+         >
+          Chrome
+        </a>
+      </li>
+      
+      <li class="devsite-footer-sites-item">
+        <a href="//firebase.google.com"
+           class="devsite-footer-sites-link
+                  gc-analytics-event"
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Footer Firebase Link"
+         
+         >
+          Firebase
+        </a>
+      </li>
+      
+      <li class="devsite-footer-sites-item">
+        <a href="//cloud.google.com"
+           class="devsite-footer-sites-link
+                  gc-analytics-event"
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Footer Google Cloud Platform Link"
+         
+         >
+          Google Cloud Platform
+        </a>
+      </li>
+      
+      <li class="devsite-footer-sites-item">
+        <a href="//ai.google.dev/"
+           class="devsite-footer-sites-link
+                  gc-analytics-event"
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Footer Google AI Link"
+         
+         >
+          Google AI
+        </a>
+      </li>
+      
+      <li class="devsite-footer-sites-item">
+        <a href="/products"
+           class="devsite-footer-sites-link
+                  gc-analytics-event"
+           data-category="Site-Wide Custom Events"
+         
+           data-label="Footer All products Link"
+         
+         >
+          All products
+        </a>
+      </li>
+      
+    </ul>
+  </nav>
+  
+
+  
+  <nav class="devsite-footer-utility-links" aria-label="Utility links">
+    
+    <ul class="devsite-footer-utility-list">
+      
+      <li class="devsite-footer-utility-item
+                 ">
+        
+        
+        <a class="devsite-footer-utility-link gc-analytics-event"
+           href="/terms/site-terms"
+           data-category="Site-Wide Custom Events"
+           data-label="Footer Terms link"
+         >
+          Terms
+        </a>
+        
+      </li>
+      
+      <li class="devsite-footer-utility-item
+                 ">
+        
+        
+        <a class="devsite-footer-utility-link gc-analytics-event"
+           href="//policies.google.com/privacy"
+           data-category="Site-Wide Custom Events"
+           data-label="Footer Privacy link"
+         >
+          Privacy
+        </a>
+        
+      </li>
+      
+      <li class="devsite-footer-utility-item
+                 glue-cookie-notification-bar-control">
+        
+        
+        <a class="devsite-footer-utility-link gc-analytics-event"
+           href="#"
+           data-category="Site-Wide Custom Events"
+           data-label="Footer Manage cookies link"
+         
+           aria-hidden="true"
+         >
+          Manage cookies
+        </a>
+        
+      </li>
+      
+    </ul>
+    
+    
+<devsite-language-selector>
+  <ul role="presentation">
+    
+    
+    <li role="presentation">
+      <a role="menuitem" lang="en"
+        
+          aria-current="true">English</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="de"
+        >Deutsch</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="es"
+        >Español</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="fr"
+        >Français</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="id"
+        >Indonesia</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="pt_br"
+        >Português – Brasil</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="ru"
+        >Русский</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="zh_cn"
+        >中文 – 简体</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="ja"
+        >日本語</a>
+    </li>
+    
+    <li role="presentation">
+      <a role="menuitem" lang="ko"
+        >한국어</a>
+    </li>
+    
+  </ul>
+</devsite-language-selector>
+
+  </nav>
+</div>
+          
+        </devsite-footer-utility>
+        <devsite-panel>
+          
+        </devsite-panel>
+        
+          <devsite-concierge
+  
+  
+    data-info-panel
+  
+  
+    data-ai-panel
+  
+  
+  
+  
+    data-api-explorer-panel
+  >
+</devsite-concierge>
+        
+      </section>
+      </section>
+    <devsite-sitemask></devsite-sitemask>
+    <devsite-snackbar></devsite-snackbar>
+    <devsite-tooltip ></devsite-tooltip>
+    <devsite-heading-link></devsite-heading-link>
+    <devsite-analytics>
+      
+        <script type="application/json" analytics>[{&#34;dimensions&#34;: {&#34;dimension3&#34;: false, &#34;dimension4&#34;: &#34;Google for Developers&#34;, &#34;dimension11&#34;: false, &#34;dimension1&#34;: &#34;Signed In&#34;, &#34;dimension5&#34;: &#34;en&#34;, &#34;dimension6&#34;: &#34;en&#34;}, &#34;gaid&#34;: &#34;UA-24532603-5&#34;, &#34;metrics&#34;: {&#34;ratings_count&#34;: &#34;metric2&#34;, &#34;ratings_value&#34;: &#34;metric1&#34;}, &#34;purpose&#34;: 1}]</script>
+<script type="application/json" tag-management>{&#34;at&#34;: &#34;True&#34;, &#34;ga4&#34;: [{&#34;id&#34;: &#34;G-272J68FCRF&#34;, &#34;purpose&#34;: 1}, {&#34;id&#34;: &#34;G-P65P8J8YWQ&#34;, &#34;purpose&#34;: 0}], &#34;ga4p&#34;: [{&#34;id&#34;: &#34;G-272J68FCRF&#34;, &#34;purpose&#34;: 1}], &#34;gtm&#34;: [{&#34;id&#34;: &#34;GTM-T98GCPGN&#34;, &#34;purpose&#34;: 1}], &#34;parameters&#34;: {&#34;internalUser&#34;: &#34;False&#34;, &#34;language&#34;: {&#34;machineTranslated&#34;: &#34;False&#34;, &#34;requested&#34;: &#34;en&#34;, &#34;served&#34;: &#34;en&#34;}, &#34;pageType&#34;: &#34;error&#34;, &#34;projectName&#34;: &#34;Google for Developers&#34;, &#34;signedIn&#34;: &#34;True&#34;, &#34;tenant&#34;: &#34;developers&#34;, &#34;recommendations&#34;: {&#34;sourcePage&#34;: &#34;&#34;, &#34;sourceType&#34;: 0, &#34;sourceRank&#34;: 0, &#34;sourceIdenticalDescriptions&#34;: 0, &#34;sourceTitleWords&#34;: 0, &#34;sourceDescriptionWords&#34;: 0, &#34;experiment&#34;: &#34;&#34;}, &#34;experiment&#34;: {&#34;ids&#34;: &#34;&#34;}}}</script>
+      
+    </devsite-analytics>
+    
+      <devsite-badger></devsite-badger>
+    
+    
+    
+    
+    
+<script nonce="v8qtCSfl1HSL9ME6IWnRuWBadE0fov">
+  
+  (function(d,e,v,s,i,t,E){d['GoogleDevelopersObject']=i;
+    t=e.createElement(v);t.async=1;t.src=s;E=e.getElementsByTagName(v)[0];
+    E.parentNode.insertBefore(t,E);})(window, document, 'script',
+    'https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/js/app_loader.js', '[1,"en",null,"/js/devsite_app_module.js","https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9","https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers","https://developers-dot-devsite-v2-prod.appspot.com",null,null,["/_pwa/developers/manifest.json","https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/images/video-placeholder.svg","https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/favicon-new.png","https://www.gstatic.com/devrel-devsite/prod/vab328caf183ea693bb389a1701d6be5b2db91193de097b9f38bbe8a87dd02cd9/developers/images/lockup-new.svg","https://fonts.googleapis.com/css?family=Google+Sans:400,500|Roboto:400,400italic,500,500italic,700,700italic|Roboto+Mono:400,500,700&display=swap"],1,null,[1,6,8,12,14,17,21,25,50,52,63,70,75,76,80,87,91,92,93,97,98,100,101,102,103,104,105,107,108,109,110,112,113,116,117,118,120,122,124,125,126,127,129,130,131,132,133,134,135,136,138,140,141,147,148,149,151,152,156,157,158,159,161,163,164,168,169,170,179,180,182,183,186,191,193,196],"AIzaSyAP-jjEJBzmIyKR4F-3XITp8yM9T1gEEI8","AIzaSyB6xiKGDR5O3Ak2okS4rLkauxGUG7XP0hg","developers.google.com","AIzaSyAQk0fBONSGUqCNznf6Krs82Ap1-NV6J4o","AIzaSyCCxcqdrZ_7QMeLCRY20bh_SXdAYqy70KY",null,null,null,["Cloud__enable_cloud_shell","Profiles__enable_completecodelab_endpoint","DevPro__enable_google_one_card","Search__enable_ai_search_summaries_restricted","Profiles__enable_awarding_url","Concierge__enable_remove_info_panel_tags","Profiles__enable_purchase_prompts","DevPro__enable_free_benefits","Profiles__enable_completequiz_endpoint","Concierge__enable_pushui","Cloud__fast_free_trial","DevPro__enable_code_assist","MiscFeatureFlags__enable_explicit_template_dependencies","MiscFeatureFlags__gdp_dashboard_reskin_enabled","Profiles__enable_join_program_group_endpoint","DevPro__enable_cloud_innovators_plus","Profiles__enable_dashboard_curated_recommendations","DevPro__enable_embed_profile_creation","DevPro__remove_eu_tax_intake_form","MiscFeatureFlags__enable_firebase_utm","Search__enable_page_map","EngEduTelemetry__enable_engedu_telemetry","MiscFeatureFlags__remove_cross_domain_tracking_params","Profiles__enable_public_developer_profiles","MiscFeatureFlags__enable_variable_operator_index_yaml","DevPro__enable_g1_ineligible_redirect","Search__enable_ai_search_summaries","Profiles__enable_profile_collections","MiscFeatureFlags__fix_lower_breadcrumbs","Concierge__enable_actions_menu","Analytics__enable_devpro_interaction_logging","Cloud__enable_cloud_dlp_service","Search__enable_ai_eligibility_checks","Profiles__enable_user_type","DevPro__enable_vertex_credit_card","DevPro__enable_payments_init","DevPro__enable_google_payments_buyflow","Significatio__enable_by_tenant","Cloud__enable_cloudx_experiment_ids","Profiles__enable_recognition_badges","MiscFeatureFlags__enable_view_transitions","DevPro__enable_developer_subscriptions","TpcFeatures__proxy_prod_host","Profiles__require_profile_eligibility_for_signin","Profiles__enable_callout_notifications","DevPro__enable_g1_integration","Search__enable_dynamic_content_confidential_banner","MiscFeatureFlags__enable_explain_this_code","MiscFeatureFlags__enable_appearance_cookies","Profiles__enable_page_saving","MiscFeatureFlags__enable_markdown_accept_header","DevPro__enable_devpro_offers","DevPro__enable_nvidia_credits_card","ProgramGroups__enable_auto_enroll","CloudShell__cloud_shell_button","Profiles__enable_auto_apply_credits","Profiles__enable_developer_profiles_callout","Cloud__enable_legacy_calculator_redirect","Concierge__enable_concierge_restricted","Profiles__enable_stripe_subscription_management","Experiments__reqs_query_experiments","MiscFeatureFlags__developers_footer_dark_image","DevPro__enable_enterprise","Home__enable_chatbot","TpcFeatures__enable_unmirrored_page_left_nav","DevPro__enable_credits_banner","Profiles__enable_complete_playlist_endpoint","Concierge__enable_devsite_llm_tools","MiscFeatureFlags__developers_footer_image","Search__enable_ai_search_summaries_for_all","Profiles__enable_targeted_hero","Cloud__enable_free_trial_server_call","CloudShell__cloud_code_overflow_menu","MiscFeatureFlags__enable_framebox_badge_methods","DevPro__enable_firebase_workspaces_card","Profiles__enable_release_notes_notifications","DevPro__enable_devsite_captcha","Search__enable_suggestions_from_borg","Cloud__cache_serialized_dynamic_content","Concierge__enable_key_takeaways","Analytics__enable_clearcut_logging","Profiles__enable_developer_profile_benefits_ui_redesign","Concierge__enable_key_takeaways_new_ui","Concierge__enable_concierge","BookNav__enable_tenant_cache_key","Profiles__enable_playlist_community_acl","Cloud__enable_cloud_shell_fte_user_flow","MiscFeatureFlags__enable_project_variables","Profiles__enable_developer_profile_pages_as_content","AIStudioInteractionsToggle__interactions_are_default","SignIn__enable_l1_signup_flow","MiscFeatureFlags__enable_variable_operator"],null,null,"AIzaSyBLEMok-5suZ67qRPzx0qUtbnLmyT_kCVE","https://developerscontentserving-pa.clients6.google.com","AIzaSyCM4QpTRSqP5qI4Dvjt4OAScIN8sOUlO-k","https://developerscontentsearch-pa.clients6.google.com",1,4,null,"https://developerprofiles-pa.clients6.google.com",[1,"developers","Google for Developers","developers.google.com",null,"developers-dot-devsite-v2-prod.appspot.com",null,null,[1,1,[1],null,null,null,null,null,null,null,null,[1],null,null,null,null,null,null,[1],[1,null,null,[1,20],"/recommendations/information"],null,null,null,[1,1,1],[1,1,null,1,1,null,null,["/meridian"]],[1,null,null,null,null,null,null,["/admob","/ad-manager/mobile-ads-sdk","/ml-kit"]],null,[null,["/meridian","/youtube/devices/"]],1,null,[1]],null,[null,null,null,null,null,null,"/images/lockup-new.svg","/images/touchicon-180-new.png",null,null,null,null,1,null,null,null,null,null,null,null,null,1,null,null,null,"/images/lockup-dark-theme-new.svg",[]],[],null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[6,1,14,15,20,22,23,29,32,36],null,[[null,null,null,[3,7,10,2,39,17,4,32,24,11,12,13,34,15,25],null,null,[1,[["docType","Choose a content type",[["Tutorial",null,null,null,null,null,null,null,null,"Tutorial"],["Guide",null,null,null,null,null,null,null,null,"Guide"],["Sample",null,null,null,null,null,null,null,null,"Sample"]]],["product","Choose a product",[["Android",null,null,null,null,null,null,null,null,"Android"],["ARCore",null,null,null,null,null,null,null,null,"ARCore"],["ChromeOS",null,null,null,null,null,null,null,null,"ChromeOS"],["Firebase",null,null,null,null,null,null,null,null,"Firebase"],["Flutter",null,null,null,null,null,null,null,null,"Flutter"],["Assistant",null,null,null,null,null,null,null,null,"Google Assistant"],["GoogleCloud",null,null,null,null,null,null,null,null,"Google Cloud"],["GoogleMapsPlatform",null,null,null,null,null,null,null,null,"Google Maps Platform"],["GooglePay",null,null,null,null,null,null,null,null,"Google Pay & Google Wallet"],["GooglePlay",null,null,null,null,null,null,null,null,"Google Play"],["Tensorflow",null,null,null,null,null,null,null,null,"TensorFlow"]]],["category","Choose a topic",[["AiAndMachineLearning",null,null,null,null,null,null,null,null,"AI and Machine Learning"],["Data",null,null,null,null,null,null,null,null,"Data"],["Enterprise",null,null,null,null,null,null,null,null,"Enterprise"],["Gaming",null,null,null,null,null,null,null,null,"Gaming"],["Mobile",null,null,null,null,null,null,null,null,"Mobile"],["Web",null,null,null,null,null,null,null,null,"Web"]]]]]],[1,1],null,1],[[["UA-24532603-1"],["UA-22084204-5"],null,null,["UA-24532603-5"],["GTM-T98GCPGN"],null,[["G-272J68FCRF"],null,null,[["G-272J68FCRF",2]]],[["UA-24532603-1",2]],null,[["UA-24532603-5",2]],[["GTM-T98GCPGN",2]],1],[[16,13],[15,12],[3,2],[1,1],[11,8],[5,4],[14,11],[4,3],[13,10],[6,5],[12,9]],[[1,1],[2,2]]],null,4,null,null,null,null,null,null,null,null,null,null,null,null,null,"developers.devsite.google",null,null,null,null,null,[]],null,"pk_live_5170syrHvgGVmSx9sBrnWtA5luvk9BwnVcvIi7HizpwauFG96WedXsuXh790rtij9AmGllqPtMLfhe2RSwD6Pn38V00uBCydV4m",1,1,"https://developerscontentinsights-pa.clients6.google.com","AIzaSyCg-ZUslalsEbXMfIo9ZP8qufZgo3LSBDU","AIzaSyDxT0vkxnY_KeINtA4LSePJO-4MAZPMRsE","https://developers.clients6.google.com",["https://codeassist.google.com","https://code-assist-free-tier.corp.google.com","https://pay.google.com","https://pay-merchant-console-autopush-qual.corp.google.com","https://pay-merchant-console-dev.corp.google.com","https://pay-merchant-console-preprod-qual.corp.google.com"],null,"AIzaSyBQom12tzI-rybN7Sf-KfeL4nwm-Rf7PmI\n",null,null,"https://developers.googleapis.com"]')
+  
+</script>
+
+    <devsite-a11y-announce></devsite-a11y-announce>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+The Gmail API lets you view and manage Gmail mailbox data like threads, messages, and labels.
+
+- [REST Resource: v1.users](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users)
+- [REST Resource: v1.users.drafts](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.drafts)
+- [REST Resource: v1.users.history](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.history)
+- [REST Resource: v1.users.labels](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.labels)
+- [REST Resource: v1.users.messages](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.messages)
+- [REST Resource: v1.users.messages.attachments](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.messages.attachments)
+- [REST Resource: v1.users.settings](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings)
+- [REST Resource: v1.users.settings.cse.identities](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.cse.identities)
+- [REST Resource: v1.users.settings.cse.keypairs](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.cse.keypairs)
+- [REST Resource: v1.users.settings.delegates](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.delegates)
+- [REST Resource: v1.users.settings.filters](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.filters)
+- [REST Resource: v1.users.settings.forwardingAddresses](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.forwardingAddresses)
+- [REST Resource: v1.users.settings.sendAs](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.sendAs)
+- [REST Resource: v1.users.settings.sendAs.smimeInfo](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.settings.sendAs.smimeInfo)
+- [REST Resource: v1.users.threads](https://developers.google.com/workspace/gmail/api/reference/rest#v1.users.threads)
+
+## Service: gmail.googleapis.com
+
+To call this service, we recommend that you use the Google-provided [client libraries](https://cloud.google.com/apis/docs/client-libraries-explained). If your application needs to use your own libraries to call this service, use the following information when you make the API requests.
+
+### Discovery document
+
+A [Discovery Document](https://developers.google.com/discovery/v1/reference/apis) is a machine-readable specification for describing and consuming REST APIs. It is used to build client libraries, IDE plugins, and other tools that interact with Google APIs. One service may provide multiple discovery documents. This service provides the following discovery document:
+
+- <https://gmail.googleapis.com/$discovery/rest?version=v1>
+
+### Service endpoint
+
+A [service endpoint](https://cloud.google.com/apis/design/glossary#api_service_endpoint) is a base URL that specifies the network address of an API service. One service might have multiple service endpoints. This service has the following service endpoint and all URIs below are relative to this service endpoint:
+
+- `https://gmail.googleapis.com`
+
+## REST Resource: [v1.users](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users/getProfile` | `GET /gmail/v1/users/{userId}/profile` Gets the current user's Gmail profile. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users/stop` | `POST /gmail/v1/users/{userId}/stop` Turn off push notification delivery for the given user mailbox. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users/watch` | `POST /gmail/v1/users/{userId}/watch` Set up or update a push notification watch on the given user mailbox. |
+
+## REST Resource: [v1.users.drafts](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/create` | `POST /gmail/v1/users/{userId}/drafts` `POST /upload/gmail/v1/users/{userId}/drafts` Creates a draft with the `DRAFT` label. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/delete` | `DELETE /gmail/v1/users/{userId}/drafts/{id}` Immediately and permanently deletes the specified draft. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/get` | `GET /gmail/v1/users/{userId}/drafts/{id}` Gets the specified draft. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/list` | `GET /gmail/v1/users/{userId}/drafts` Lists the drafts in the user's mailbox. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/send` | `POST /gmail/v1/users/{userId}/drafts/send` `POST /upload/gmail/v1/users/{userId}/drafts/send` Sends the specified, existing draft to the recipients in the `To`, `Cc`, and `Bcc` headers. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/update` | `PUT /gmail/v1/users/{userId}/drafts/{id}` `PUT /upload/gmail/v1/users/{userId}/drafts/{id}` Replaces a draft's content. |
+
+## REST Resource: [v1.users.history](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.history)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.history/list` | `GET /gmail/v1/users/{userId}/history` Lists the history of all changes to the given mailbox. |
+
+## REST Resource: [v1.users.labels](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/create` | `POST /gmail/v1/users/{userId}/labels` Creates a label. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/delete` | `DELETE /gmail/v1/users/{userId}/labels/{id}` Immediately and permanently deletes the specified label and removes it from any messages and threads that it's applied to. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/get` | `GET /gmail/v1/users/{userId}/labels/{id}` Gets the specified label. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/list` | `GET /gmail/v1/users/{userId}/labels` Lists all labels in the user's mailbox. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/patch` | `PATCH /gmail/v1/users/{userId}/labels/{id}` Patch the specified label. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.labels/update` | `PUT /gmail/v1/users/{userId}/labels/{id}` Updates the specified label. |
+
+## REST Resource: [v1.users.messages](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/batchDelete` | `POST /gmail/v1/users/{userId}/messages/batchDelete` Deletes many messages by message ID. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/batchModify` | `POST /gmail/v1/users/{userId}/messages/batchModify` Modifies the labels on the specified messages. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/delete` | `DELETE /gmail/v1/users/{userId}/messages/{id}` Immediately and permanently deletes the specified message. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get` | `GET /gmail/v1/users/{userId}/messages/{id}` Gets the specified message. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/import` | `POST /gmail/v1/users/{userId}/messages/import` `POST /upload/gmail/v1/users/{userId}/messages/import` Imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/insert` | `POST /gmail/v1/users/{userId}/messages` `POST /upload/gmail/v1/users/{userId}/messages` Directly inserts a message into only this user's mailbox similar to `IMAP APPEND`, bypassing most scanning and classification. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list` | `GET /gmail/v1/users/{userId}/messages` Lists the messages in the user's mailbox. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/modify` | `POST /gmail/v1/users/{userId}/messages/{id}/modify` Modifies the labels on the specified message. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/send` | `POST /gmail/v1/users/{userId}/messages/send` `POST /upload/gmail/v1/users/{userId}/messages/send` Sends the specified message to the recipients in the `To`, `Cc`, and `Bcc` headers. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/trash` | `POST /gmail/v1/users/{userId}/messages/{id}/trash` Moves the specified message to the trash. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/untrash` | `POST /gmail/v1/users/{userId}/messages/{id}/untrash` Removes the specified message from the trash. |
+
+## REST Resource: [v1.users.messages.attachments](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages.attachments)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages.attachments/get` | `GET /gmail/v1/users/{userId}/messages/{messageId}/attachments/{id}` Gets the specified message attachment. |
+
+## REST Resource: [v1.users.settings](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/getAutoForwarding` | `GET /gmail/v1/users/{userId}/settings/autoForwarding` Gets the auto-forwarding setting for the specified account. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/getImap` | `GET /gmail/v1/users/{userId}/settings/imap` Gets IMAP settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/getLanguage` | `GET /gmail/v1/users/{userId}/settings/language` Gets language settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/getPop` | `GET /gmail/v1/users/{userId}/settings/pop` Gets POP settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/getVacation` | `GET /gmail/v1/users/{userId}/settings/vacation` Gets vacation responder settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/updateAutoForwarding` | `PUT /gmail/v1/users/{userId}/settings/autoForwarding` Updates the auto-forwarding setting for the specified account. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/updateImap` | `PUT /gmail/v1/users/{userId}/settings/imap` Updates IMAP settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/updateLanguage` | `PUT /gmail/v1/users/{userId}/settings/language` Updates language settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/updatePop` | `PUT /gmail/v1/users/{userId}/settings/pop` Updates POP settings. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings/updateVacation` | `PUT /gmail/v1/users/{userId}/settings/vacation` Updates vacation responder settings. |
+
+## REST Resource: [v1.users.settings.cse.identities](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.identities)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.identities/create` | `POST /gmail/v1/users/{userId}/settings/cse/identities` Creates and configures a client-side encryption identity that's authorized to send mail from the user account. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.identities/delete` | `DELETE /gmail/v1/users/{userId}/settings/cse/identities/{cseEmailAddress}` Deletes a client-side encryption identity. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.identities/get` | `GET /gmail/v1/users/{userId}/settings/cse/identities/{cseEmailAddress}` Retrieves a client-side encryption identity configuration. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.identities/list` | `GET /gmail/v1/users/{userId}/settings/cse/identities` Lists the client-side encrypted identities for an authenticated user. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.identities/patch` | `PATCH /gmail/v1/users/{userId}/settings/cse/identities/{emailAddress}` Associates a different key pair with an existing client-side encryption identity. |
+
+## REST Resource: [v1.users.settings.cse.keypairs](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs/create` | `POST /gmail/v1/users/{userId}/settings/cse/keypairs` Creates and uploads a client-side encryption S/MIME public key certificate chain and private key metadata for the authenticated user. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs/disable` | `POST /gmail/v1/users/{userId}/settings/cse/keypairs/{keyPairId}:disable` Turns off a client-side encryption key pair. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs/enable` | `POST /gmail/v1/users/{userId}/settings/cse/keypairs/{keyPairId}:enable` Turns on a client-side encryption key pair that was turned off. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs/get` | `GET /gmail/v1/users/{userId}/settings/cse/keypairs/{keyPairId}` Retrieves an existing client-side encryption key pair. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs/list` | `GET /gmail/v1/users/{userId}/settings/cse/keypairs` Lists client-side encryption key pairs for an authenticated user. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.cse.keypairs/obliterate` | `POST /gmail/v1/users/{userId}/settings/cse/keypairs/{keyPairId}:obliterate` Deletes a client-side encryption key pair permanently and immediately. |
+
+## REST Resource: [v1.users.settings.delegates](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.delegates)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.delegates/create` | `POST /gmail/v1/users/{userId}/settings/delegates` Adds a delegate with its verification status set directly to `accepted`, without sending any verification email. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.delegates/delete` | `DELETE /gmail/v1/users/{userId}/settings/delegates/{delegateEmail}` Removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.delegates/get` | `GET /gmail/v1/users/{userId}/settings/delegates/{delegateEmail}` Gets the specified delegate. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.delegates/list` | `GET /gmail/v1/users/{userId}/settings/delegates` Lists the delegates for the specified account. |
+
+## REST Resource: [v1.users.settings.filters](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters/create` | `POST /gmail/v1/users/{userId}/settings/filters` Creates a filter. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters/delete` | `DELETE /gmail/v1/users/{userId}/settings/filters/{id}` Immediately and permanently deletes the specified filter. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters/get` | `GET /gmail/v1/users/{userId}/settings/filters/{id}` Gets a filter. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.filters/list` | `GET /gmail/v1/users/{userId}/settings/filters` Lists the message filters of a Gmail user. |
+
+## REST Resource: [v1.users.settings.forwardingAddresses](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/create` | `POST /gmail/v1/users/{userId}/settings/forwardingAddresses` Creates a forwarding address. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/delete` | `DELETE /gmail/v1/users/{userId}/settings/forwardingAddresses/{forwardingEmail}` Deletes the specified forwarding address and revokes any verification that may have been required. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/get` | `GET /gmail/v1/users/{userId}/settings/forwardingAddresses/{forwardingEmail}` Gets the specified forwarding address. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.forwardingAddresses/list` | `GET /gmail/v1/users/{userId}/settings/forwardingAddresses` Lists the forwarding addresses for the specified account. |
+
+## REST Resource: [v1.users.settings.sendAs](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/create` | `POST /gmail/v1/users/{userId}/settings/sendAs` Creates a custom "from" send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/delete` | `DELETE /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}` Deletes the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/get` | `GET /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}` Gets the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/list` | `GET /gmail/v1/users/{userId}/settings/sendAs` Lists the send-as aliases for the specified account. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/patch` | `PATCH /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}` Patch the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/update` | `PUT /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}` Updates a send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs/verify` | `POST /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/verify` Sends a verification email to the specified send-as alias address. |
+
+## REST Resource: [v1.users.settings.sendAs.smimeInfo](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/delete` | `DELETE /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}` Deletes the specified S/MIME config for the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/get` | `GET /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}` Gets the specified S/MIME config for the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/insert` | `POST /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo` Insert (upload) the given S/MIME config for the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/list` | `GET /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo` Lists S/MIME configs for the specified send-as alias. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.settings.sendAs.smimeInfo/setDefault` | `POST /gmail/v1/users/{userId}/settings/sendAs/{sendAsEmail}/smimeInfo/{id}/setDefault` Sets the default S/MIME config for the specified send-as alias. |
+
+## REST Resource: [v1.users.threads](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/delete` | `DELETE /gmail/v1/users/{userId}/threads/{id}` Immediately and permanently deletes the specified thread. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/get` | `GET /gmail/v1/users/{userId}/threads/{id}` Gets the specified thread. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/list` | `GET /gmail/v1/users/{userId}/threads` Lists the threads in the user's mailbox. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/modify` | `POST /gmail/v1/users/{userId}/threads/{id}/modify` Modifies the labels applied to the thread. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/trash` | `POST /gmail/v1/users/{userId}/threads/{id}/trash` Moves the specified thread to the trash. |
+| `https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.threads/untrash` | `POST /gmail/v1/users/{userId}/threads/{id}/untrash` Removes the specified thread from the trash. |
+
+
+
+
+# Google Sheets API
+
+Reads and writes Google Sheets.
+
+- [REST Resource: v4.spreadsheets](https://developers.google.com/workspace/sheets/api/reference/rest#v4.spreadsheets)
+- [REST Resource: v4.spreadsheets.developerMetadata](https://developers.google.com/workspace/sheets/api/reference/rest#v4.spreadsheets.developerMetadata)
+- [REST Resource: v4.spreadsheets.sheets](https://developers.google.com/workspace/sheets/api/reference/rest#v4.spreadsheets.sheets)
+- [REST Resource: v4.spreadsheets.values](https://developers.google.com/workspace/sheets/api/reference/rest#v4.spreadsheets.values)
+
+## Service: sheets.googleapis.com
+
+To call this service, we recommend that you use the Google-provided [client libraries](https://cloud.google.com/apis/docs/client-libraries-explained). If your application needs to use your own libraries to call this service, use the following information when you make the API requests.
+
+### Discovery document
+
+A [Discovery Document](https://developers.google.com/discovery/v1/reference/apis) is a machine-readable specification for describing and consuming REST APIs. It is used to build client libraries, IDE plugins, and other tools that interact with Google APIs. One service may provide multiple discovery documents. This service provides the following discovery document:
+
+- <https://sheets.googleapis.com/$discovery/rest?version=v4>
+
+### Service endpoint
+
+A [service endpoint](https://cloud.google.com/apis/design/glossary#api_service_endpoint) is a base URL that specifies the network address of an API service. One service might have multiple service endpoints. This service has the following service endpoint and all URIs below are relative to this service endpoint:
+
+- `https://sheets.googleapis.com`
+
+## REST Resource: [v4.spreadsheets](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/batchUpdate` | `POST /v4/spreadsheets/{spreadsheetId}:batchUpdate` Applies one or more updates to the spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/create` | `POST /v4/spreadsheets` Creates a spreadsheet, returning the newly created spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/get` | `GET /v4/spreadsheets/{spreadsheetId}` Returns the spreadsheet at the given ID. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/getByDataFilter` | `POST /v4/spreadsheets/{spreadsheetId}:getByDataFilter` Returns the spreadsheet at the given ID. |
+
+## REST Resource: [v4.spreadsheets.developerMetadata](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.developerMetadata)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.developerMetadata/get` | `GET /v4/spreadsheets/{spreadsheetId}/developerMetadata/{metadataId}` Returns the developer metadata with the specified ID. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.developerMetadata/search` | `POST /v4/spreadsheets/{spreadsheetId}/developerMetadata:search` Returns all developer metadata matching the specified `https://developers.google.com/workspace/sheets/api/reference/rest/v4/DataFilter`. |
+
+## REST Resource: [v4.spreadsheets.sheets](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.sheets)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.sheets/copyTo` | `POST /v4/spreadsheets/{spreadsheetId}/sheets/{sheetId}:copyTo` Copies a single sheet from a spreadsheet to another spreadsheet. |
+
+## REST Resource: [v4.spreadsheets.values](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values)
+
+| Methods ||
+|---|---|
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/append` | `POST /v4/spreadsheets/{spreadsheetId}/values/{range}:append` Appends values to a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchClear` | `POST /v4/spreadsheets/{spreadsheetId}/values:batchClear` Clears one or more ranges of values from a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchClearByDataFilter` | `POST /v4/spreadsheets/{spreadsheetId}/values:batchClearByDataFilter` Clears one or more ranges of values from a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchGet` | `GET /v4/spreadsheets/{spreadsheetId}/values:batchGet` Returns one or more ranges of values from a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchGetByDataFilter` | `POST /v4/spreadsheets/{spreadsheetId}/values:batchGetByDataFilter` Returns one or more ranges of values that match the specified data filters. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchUpdate` | `POST /v4/spreadsheets/{spreadsheetId}/values:batchUpdate` Sets values in one or more ranges of a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchUpdateByDataFilter` | `POST /v4/spreadsheets/{spreadsheetId}/values:batchUpdateByDataFilter` Sets values in one or more ranges of a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/clear` | `POST /v4/spreadsheets/{spreadsheetId}/values/{range}:clear` Clears values from a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/get` | `GET /v4/spreadsheets/{spreadsheetId}/values/{range}` Returns a range of values from a spreadsheet. |
+| `https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/update` | `PUT /v4/spreadsheets/{spreadsheetId}/values/{range}` Sets values in a range of a spreadsheet. |
+
+
+
+
+
+
+
+

@@ -8,6 +8,7 @@ Provides REST APIs for:
 """
 
 import inspect
+import base64
 import hmac
 import ipaddress
 import json
@@ -54,13 +55,25 @@ from backend.agent.brain_langchain.api_manager.activity_stream import (
 from backend.agent.brain_langchain import BrainChatModel
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from backend.agent.single_agent import call_agent
+from backend.agent.agent_profiles import (
+    delete_agent_profile,
+    get_agent_profile,
+    list_agent_profiles,
+    remove_tool_from_agent_profiles,
+    save_agent_profile,
+    set_tool_agent_assignments,
+)
 from backend.tools.features import (
+    get_langchain_tools,
     load_registry,
     refresh_tools_registry,
     create_tool,
     update_tool_enabled,
     _load_module,
     _find_main_func,
+    delete_tool_file,
+    get_tool_source,
+    update_tool_source,
 )
 
 app = FastAPI(title="Brain Studio UI Server", version="1.0.0")
@@ -154,11 +167,27 @@ class ToolExecuteRequest(BaseModel):
 class ToolCreateRequest(BaseModel):
     file_name: str
     content: str
-    mode: str = "w"
+    mode: str = "x"
+
+
+class ToolSourceRequest(BaseModel):
+    content: str = Field(max_length=262144)
+
+
+class ToolAgentAssignmentRequest(BaseModel):
+    agent_ids: List[str] = Field(default_factory=list, max_length=100)
 
 
 class ToolEnabledRequest(BaseModel):
     enabled: bool
+
+
+class AgentProfileRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    description: str = Field(default="", max_length=2000)
+    system_prompt: str = Field(min_length=1, max_length=50000)
+    tool_names: List[str] = Field(default_factory=list, max_length=200)
+    profile_photo: Optional[str] = None
 
 
 class ConversationCreate(BaseModel):
@@ -172,6 +201,7 @@ class ConversationUpdate(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     mode: str = "agent"  # "agent" or "direct"
+    agent_id: Optional[str] = None
     temperature: float = 0.2
     max_turns: int = Field(default=20, ge=1, le=50)
     conversation_id: Optional[int] = None
@@ -556,10 +586,68 @@ def delete_api_key(key_id: int):
 def list_tools():
     registry = load_registry(force=True)
     tools = registry.get("tools", {})
+    profiles = list_agent_profiles()
     for info in tools.values():
         if isinstance(info, dict):
             info.setdefault("enabled", True)
+    for tool_name, info in tools.items():
+        if not isinstance(info, dict):
+            continue
+        info["assigned_agents"] = [
+            {"id": profile["id"], "name": profile["name"]}
+            for profile in profiles
+            if profile["tool_names"] == ["*"] or tool_name in profile["tool_names"]
+        ]
     return tools
+
+
+@app.get("/api/tools/{tool_name}/source")
+def read_tool_source(tool_name: str):
+    try:
+        return get_tool_source(tool_name)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Tool '{tool_name}' not found in registry")
+    except (OSError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.put("/api/tools/{tool_name}/source")
+def write_tool_source(tool_name: str, req: ToolSourceRequest):
+    try:
+        return update_tool_source(tool_name, req.content)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Tool '{tool_name}' not found in registry")
+    except (OSError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.put("/api/tools/{tool_name}/agents")
+def assign_tool_agents(tool_name: str, req: ToolAgentAssignmentRequest):
+    try:
+        profiles = set_tool_agent_assignments(tool_name, req.agent_ids)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown tool or agent: {exc}") from exc
+    return {
+        "success": True,
+        "assigned_agents": [
+            {"id": profile["id"], "name": profile["name"]}
+            for profile in profiles
+            if profile["tool_names"] == ["*"] or tool_name in profile["tool_names"]
+        ],
+    }
+
+
+@app.delete("/api/tools/{tool_name}")
+def remove_tool(tool_name: str):
+    try:
+        result = delete_tool_file(tool_name)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Tool '{tool_name}' not found in registry")
+    except (OSError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    for deleted_name in result["deleted_tools"]:
+        remove_tool_from_agent_profiles(deleted_name)
+    return result
 
 
 @app.put("/api/tools/{tool_name}/enabled")
@@ -612,10 +700,105 @@ def execute_tool_manually(req: ToolExecuteRequest):
 @app.post("/api/tools/create")
 def create_new_tool(req: ToolCreateRequest):
     """Create a new tool script in backend/tools/ and reload the registry."""
+    if req.mode != "x":
+        raise HTTPException(status_code=400, detail="Creating a tool cannot overwrite an existing file.")
     res = create_tool(file_name=req.file_name, content=req.content, mode=req.mode)
     if not res.get("success"):
         raise HTTPException(status_code=400, detail=res.get("error"))
     return res
+
+
+# -----------------------------------------------------------------------------
+# Agent profile management
+# -----------------------------------------------------------------------------
+
+def _validated_agent_profile(req: AgentProfileRequest) -> Dict[str, Any]:
+    tool_names = list(dict.fromkeys(name.strip() for name in req.tool_names if name.strip()))
+    if "*" in tool_names and tool_names != ["*"]:
+        raise HTTPException(status_code=400, detail="'*' must be the only selected tool.")
+
+    available_tools = load_registry(force=True).get("tools", {})
+    unknown_tools = [name for name in tool_names if name != "*" and name not in available_tools]
+    if unknown_tools:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown tool name(s): {', '.join(unknown_tools)}",
+        )
+
+    photo = req.profile_photo
+    if photo:
+        match = re.fullmatch(
+            r"data:image/(?:png|jpeg|webp|gif);base64,([A-Za-z0-9+/]*={0,2})",
+            photo,
+        )
+        if not match:
+            raise HTTPException(status_code=400, detail="Profile photo must be a PNG, JPEG, WebP, or GIF image.")
+        try:
+            decoded = base64.b64decode(match.group(1), validate=True)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="Profile photo data is invalid.") from exc
+        if len(decoded) > 2 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="Profile photo must be 2 MB or smaller.")
+
+    return {
+        "name": req.name.strip(),
+        "description": req.description.strip(),
+        "system_prompt": req.system_prompt,
+        "tool_names": tool_names,
+        "profile_photo": photo,
+    }
+
+
+@app.get("/api/agents")
+def list_agents():
+    """Return saved agent profiles and the current registered tool catalog."""
+    profiles = list_agent_profiles()
+    registry = load_registry(force=True).get("tools", {})
+    return {
+        "agents": profiles,
+        "tools": [
+            {
+                "name": name,
+                "description": info.get("description", ""),
+                "enabled": info.get("enabled", True),
+                "status": info.get("status", "unknown"),
+            }
+            for name, info in sorted(registry.items())
+            if isinstance(info, dict)
+        ],
+    }
+
+
+@app.post("/api/agents")
+def create_agent(req: AgentProfileRequest):
+    try:
+        return save_agent_profile(_validated_agent_profile(req))
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"Could not create agent profile: {exc}") from exc
+
+
+@app.put("/api/agents/{agent_id}")
+def update_agent(agent_id: str, req: AgentProfileRequest):
+    if get_agent_profile(agent_id) is None:
+        raise HTTPException(status_code=404, detail=f"Agent profile '{agent_id}' was not found.")
+    try:
+        return save_agent_profile(_validated_agent_profile(req), profile_id=agent_id)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"Could not update agent profile: {exc}") from exc
+
+
+@app.delete("/api/agents/{agent_id}")
+def remove_agent(agent_id: str):
+    try:
+        if not delete_agent_profile(agent_id):
+            raise HTTPException(status_code=404, detail=f"Agent profile '{agent_id}' was not found.")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"success": True}
 
 
 # -----------------------------------------------------------------------------
@@ -950,9 +1133,17 @@ def handle_chat_message(req: ChatRequest):
                 if a_text:
                     history.append({"role": "assistant", "content": a_text})
 
+        agent_profile = None
+        if req.mode == "agent":
+            agent_id = req.agent_id or "assistant"
+            agent_profile = get_agent_profile(agent_id)
+            if agent_profile is None:
+                raise HTTPException(status_code=404, detail=f"Agent profile '{agent_id}' was not found.")
+
         request_payload = {
             "user_prompt": req.message,
             "mode": req.mode,
+            "agent_id": agent_profile["id"] if agent_profile else None,
             "temperature": req.temperature,
             "max_turns": req.max_turns,
             "conversation_id": conv_id,
@@ -1004,9 +1195,30 @@ def handle_chat_message(req: ChatRequest):
                         "mode": "direct",
                     }
         else:
-            # Autonomous Agent mode with memory across turns
+            available_tools = get_langchain_tools(force_reload=True)
+            selected_tool_names = agent_profile["tool_names"]
+            if selected_tool_names == ["*"]:
+                agent_tools = available_tools
+            else:
+                available_by_name = {tool.name: tool for tool in available_tools}
+                missing_tools = [
+                    name for name in selected_tool_names if name not in available_by_name
+                ]
+                if missing_tools:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=(
+                            "Selected tool(s) are not currently enabled or available: "
+                            + ", ".join(missing_tools)
+                        ),
+                    )
+                agent_tools = [
+                    available_by_name[name] for name in selected_tool_names
+                ]
+
             result_text = call_agent(
                 user_prompt=req.message,
+                tools=agent_tools,
                 max_turns=req.max_turns,
                 temperature=req.temperature,
                 verbose=False,
@@ -1014,6 +1226,7 @@ def handle_chat_message(req: ChatRequest):
                 history=history,
                 log_payload=request_payload,
                 process_started_at=start_time,
+                system_prompt_override=agent_profile["system_prompt"],
             )
             duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
             return {
@@ -1021,6 +1234,7 @@ def handle_chat_message(req: ChatRequest):
                 "response": result_text,
                 "duration_ms": duration_ms,
                 "mode": "agent",
+                "agent_id": agent_profile["id"],
                 "conversation_id": conv_id,
             }
     except Exception as e:
